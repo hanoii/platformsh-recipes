@@ -1,0 +1,23 @@
+#ddev-generated
+# To upgrade: ddev get https://github.com/hanoii/ddev-platformsh-lite/tarball/master
+# If you wish to maintain this file differently, remove #ddev-generated above.
+# @see https://github.com/hanoii/ddev-platformsh-lite
+web_environment:
+  # Avoid checking for updates, as it will be updated on start.
+  - PLATFORMSH_CLI_UPDATES_CHECK=0
+hooks:
+  post-start:
+    # Run add-on platform.sh commands to startup
+    #
+    # This is run after any post-start command on your main config.yaml file
+    # and in a lexicographic order for any other config.*.yaml present
+    # in your ddev project.
+    #
+    # It's recommended that you run this before any other tasks, so you can copy
+    # the next line to your config.yaml file. The actions there will be run once,
+    # you don't need to do anything on this file.
+    #
+    # For drupal/drush it's recommended to be added after
+    # - composer: install
+    #
+    - exec: 'bash /var/www/html/.ddev/platformsh-lite-addon-post-start.sh'

@@ -1,0 +1,12 @@
+name: platformsh-lite
+repository: https://github.com/hanoii/ddev-platformsh-lite/tarball/main
+version: ""
+install_date: "2024-02-23T12:12:57-03:00"
+project_files:
+    - config.platformsh-lite.yaml
+    - docker-compose.platformsh-lite.yaml
+    - platformsh-lite-addon-post-start.sh
+    - commands/web/platform
+    - commands/host/platform:tunnels
+global_files: []
+removal_actions: []

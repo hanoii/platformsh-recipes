@@ -1,0 +1,27 @@
+#!/bin/bash
+
+## #ddev-generated
+## Description: Show urls of any platform tunnel opened url with host ports.
+## Usage: platform:tunnels
+## Example: ddev platform:tunnels
+
+[[ -f .ddev/.env ]] && source .ddev/.env
+
+for i in $(ddev exec "platform tunnels --all --format=csv --no-header || true"); do
+  IFS=, read -r port project environment app property <<<"$i"
+  container_info=$(ddev exec "platform tunnel:info -p $project -A $app -e $environment -P $property | yq '.[] |= (.scheme |= sub(\"solr\", \"http\")) |= .url = .scheme + \"://\" | .[] |= with(select(.username != null); .url += .username) | .[] |= with(select(.password != null); .url += \":\" + .password) | .[] |= with(select(.username != null); .url += \"@\") | .[] |= .url += \"127.0.0.1:\" + .port | .[] | .port + \" \" + .url'")
+  container_parts=($container_info)
+  container_port=${container_parts[0]}
+  host_port=$(~/.ddev/bin/docker-compose -f .ddev/.ddev-docker-compose-full.yaml port web $container_port 2> /dev/null)
+  host_port=${host_port#0.0.0.0:}
+  if [[ $? -eq 0 ]]; then
+    echo $property: ${container_parts[1]/"$container_port"/"$host_port"}
+  else
+    error=true
+    echo -e "\033[0;33m[warning] port $container_port is not currently exposed on ddev. You cannot access ${container_parts[1]}\033[0m"
+  fi
+done
+
+if [[ "$error" == "true" ]]; then
+  echo -e "\033[0;33m[warning] Consider increasing DDEV_PLATFORMSH_LITE_TUNNEL_UPPER_RANGE on your ~.ddev/.env file.\033[0m"
+fi

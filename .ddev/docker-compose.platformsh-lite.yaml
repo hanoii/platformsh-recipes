@@ -1,0 +1,12 @@
+#ddev-generated
+
+services:
+  web:
+    ports:
+      # There are multiple ways to change this or expose more ports if your
+      # project needs them, but this addon was meant for
+      # DDEV_PLATFORMSH_LITE_TUNNEL_UPPER_RANGE to be added to your `.ddev/.env`
+      # file. You can create one if you don't have it.
+      # That environment variable is also used by the 'ddev platform:tunnel'
+      # host command.
+      - "30000-${DDEV_PLATFORMSH_LITE_TUNNEL_UPPER_RANGE-30001}"
