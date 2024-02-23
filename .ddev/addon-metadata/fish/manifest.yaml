@@ -1,0 +1,9 @@
+name: fish
+repository: https://github.com/hanoii/ddev-fish/tarball/main
+version: ""
+install_date: "2024-02-23T11:24:05-03:00"
+project_files:
+    - web-build/Dockerfile.fish
+    - commands/host/fish
+global_files: []
+removal_actions: []
