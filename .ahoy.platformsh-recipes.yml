@@ -24,3 +24,15 @@ commands:
   log:ipblock:
     usage: Block BAD IPs
     cmd: ./scripts/platformsh-recipes/logs/ipblock.sh "$@"
+
+  log:push:
+    usage: See the latest push activity log
+    cmd: ./scripts/platformsh-recipes/commands/log-push.sh "$@"
+
+  log:push:list:
+    usage: See the latest push activities
+    cmd: ./scripts/platformsh-recipes/commands/log-push-list.sh "$@"
+
+  ipblock:
+    usage: Add IP to the block list
+    cmd: ./scripts/platformsh-recipes/commands/ipblock.sh "$@"

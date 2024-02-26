@@ -5,8 +5,10 @@ cmd=ahoy
 if [ -z "$PLATFORM_APPLICATION_NAME" ]; then
   cmd="$cmd platform"
 fi
-blocked_ips=($(platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} 2>&1 | grep deny | perl -pe "s/.*?address: ([^\s\/]*).*/\$1/" | xargs -I {} echo '{}' | xargs))
-blocked_already=$(platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} 2>&1 | grep deny | perl -pe "s/.*?address: ([^\s]*).*/\$1/" | xargs -I {} echo '--access deny:{}' | xargs)
+httpaccess=$(platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} 2>&1)
+# { grep deny || test $? = 1; } from https://stackoverflow.com/a/49627999
+blocked_ips=($(echo "$httpaccess" | { grep deny || test $? = 1; }  | perl -pe "s/.*?address: ([^\s\/]*).*/\$1/" | xargs -I {} echo '{}' | xargs))
+blocked_already=$(echo "$httpaccess" | { grep deny || test $? = 1; }  | perl -pe "s/.*?address: ([^\s]*).*/\$1/" | xargs -I {} echo '--access deny:{}' | xargs)
 cmd_str="$cmd log:access --ip --extra 'grep -Pi \"select[^a-zA-Z0-9_\-\/\s]|\.env|sysgmdate(\(|%28)|wp-content|wp-admin|go-http-client|(?<!/index)\.php|\.jsp HTTP|\.html HTTP\"' $@"
 >&2 echo -e "\033[0;36mRunning '$cmd_str'...\033[0m"
 ips=$(eval $cmd_str 2> /dev/null)
