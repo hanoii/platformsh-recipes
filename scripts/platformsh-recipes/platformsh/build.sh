@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 ##
 # Install screen package and its dependencies

@@ -81,7 +81,7 @@ variables:
 
 ### Tools
 
-There are different utils that I usually add to platform, some of them are
+There are different tools that I usually add to platform, some of them are
 required by the commands referenced below.
 
 You can take what you want from
