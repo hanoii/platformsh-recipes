@@ -53,7 +53,6 @@ hooks:
     rm -fr /tmp/platformsh-recipes
     # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
     # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
-
     echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
 ```
 
