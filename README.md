@@ -4,8 +4,9 @@ A collection of scripts, commands, recipes and notes for platform.sh
 
 <!-- toc -->
 
+- [Platform.sh setup](#platformsh-setup)
+  * [Tools](#tools)
 - [Performance troubleshooting](#performance-troubleshooting)
-  * [Platform.sh setup](#platformsh-setup)
   * [ahoy commans](#ahoy-commans)
   * [Time/memory used](#timememory-used)
   * [404s](#404s)
@@ -17,16 +18,7 @@ A collection of scripts, commands, recipes and notes for platform.sh
 
 <!-- tocstop -->
 
-## Performance troubleshooting
-
-The commands here can also be used to test and access platform projects locally,
-to do that you need to make available the following environment variables:
-
-- `PLATFORMSH_CLI_TOKEN`
-- `PLATFORM_PROJECT`
-- `PLATFORMSH_RECIPES_MAIN_BRANCH=main` (optional, defaults to `master`)
-
-### Platform.sh setup
+## Platform.sh setup
 
 The following needs you to get the scripts and any other necessary bits on your
 app on platform.sh, to do that you can add something like the following to your
@@ -37,6 +29,8 @@ build hook:
 - update `COMMIT-SHA1` with the commit you want to pull.
 - Review the `cp` lines below and adapt as necessary to fit your projects,
   basically copy over whatever you need from the repo based on your needs.
+- [ahoy](#tools) needs to be installed in the app container if you are going to
+  use ahoy commands.
 
 ```yml
 hooks:
@@ -48,6 +42,8 @@ hooks:
     mkdir -p /tmp/platformsh-recipes
     cd /tmp/platformsh-recipes
     wget -qO- https://github.com/hanoii/platformsh-recipes/archive/COMMIT-SHA1.tar.gz | tar -zxf - --strip-component=1 -C /tmp/platformsh-recipes
+    # Install tools
+    # ./scripts/platformsh-recipes/platformsh/build.sh
     cp -R /tmp/platformsh-recipes/scripts $PLATFORM_APP_DIR
     # cp /tmp/platformsh-recipes/.ahoy.platformsh-recipes.yml $PLATFORM_APP_DIR/.ahoy.yml
     rm -fr /tmp/platformsh-recipes
@@ -82,6 +78,31 @@ variable:
 variables:
   PLATFORMSH_RECIPES_MAIN_BRANCH: main
 ```
+
+### Tools
+
+There are different utils that I usually add to platform, some of them are
+required by the commands referenced below.
+
+You can take what you want from
+[this repo's build.sh](scripts/platformsh-recipes/platformsh/build.sh) or
+install them all by uncomment the following line in the build recipe above.
+
+```yml
+hooks:
+  build: |
+    # Install tools
+    # ./scripts/platformsh-recipes/platformsh/build.sh
+```
+
+## Performance troubleshooting
+
+The commands here can also be used to test and access platform projects locally,
+to do that you need to make available the following environment variables:
+
+- `PLATFORMSH_CLI_TOKEN`
+- `PLATFORM_PROJECT`
+- `PLATFORMSH_RECIPES_MAIN_BRANCH=main` (optional, defaults to `master`)
 
 ### ahoy commans
 
