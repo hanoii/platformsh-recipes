@@ -95,6 +95,19 @@ hooks:
     # ./scripts/platformsh-recipes/platformsh/build.sh
 ```
 
+Some of this tools also needs additions to [Platform.sh's .environment
+file][platformsh-environment]. You can also take what you need from
+[this repo's .environment](scripts/platformsh-recipes/platformsh/.environment)
+or source it directly by adding the following to your `.environment` file (**if
+you are executing the biuld.sh, doing this is also necessary**):
+
+```
+source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.environment
+```
+
+[platformsh-environment]:
+  https://docs.platform.sh/development/variables/set-variables.html#testing-environment-scripts
+
 ## Performance troubleshooting
 
 The commands here can also be used to test and access platform projects locally,

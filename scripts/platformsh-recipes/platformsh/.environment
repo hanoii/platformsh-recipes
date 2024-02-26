@@ -1,0 +1,9 @@
+# For libraries installed on build hook for some of the apps
+export LD_LIBRARY_PATH="${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
+
+# Only run the below code for bash, bear in mind that
+# dash does not support every bashism and this file is also sourced by dash
+# and dash is used in many places on platform.
+if [ -n "$PLATFORM_APP_DIR" -a -n "$BASH" ]; then
+  [ -f ~/.bashrc ] && source ~/.bashrc
+fi
