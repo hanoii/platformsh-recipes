@@ -18,7 +18,7 @@ block=""
 echo ""
 for i in ${!ips_array[*]}; do
   ip_cnt=(${ips_array[$i]})
-  if [ ${ip_cnt[0]} -gt 3 ]; then
+  if [ ${ip_cnt[0]} -gt ${PLATFORMSH_RECIPES_IPBLOCK_THRESHOLD-20} ]; then
     ip=${ip_cnt[1]//[[:space:]]/}
     if [[ ! "${blocked_ips[@]}" =~ $ip ]]; then
       >&2 echo -e "\033[0;33m[       ] Bad IP $ip found with ${ip_cnt[0]} hits, about to be blocked...\033[0m"
