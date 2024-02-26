@@ -21,11 +21,11 @@ for i in ${!ips_array[*]}; do
   if [ ${ip_cnt[0]} -gt 3 ]; then
     ip=${ip_cnt[1]//[[:space:]]/}
     if [[ ! "${blocked_ips[@]}" =~ $ip ]]; then
+      >&2 echo -e "\033[0;33m[       ] Bad IP $ip found with ${ip_cnt[0]} hits, about to be blocked...\033[0m"
       if [[ "$ip" =~ [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+ ]]; then
-        >&2 echo -e "\033[0;33m[       ] Bad IP $ip found with ${ip_cnt[0]} hits, about to be blocked...\033[0m"
         block="$block --access deny:$ip/32"
       else
-        >&2 echo -e "\033[0;31m[ error ] Bad IP $ip found with ${ip_cnt[0]} hits, IPv6 format not supported...\033[0m"
+        block="$block --access deny:$ip/128"
       fi
     else
       >&2 echo -e "\033[0;32m[ ok    ] Bad IP $ip found with ${ip_cnt[0]} hits, but already blocked...\033[0m"
