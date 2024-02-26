@@ -67,7 +67,7 @@ commit sha of the repo for `PLATFORMSH_RECIPES_VERSION`**) :
 hooks:
   build: |
     export PLATFORMSH_RECIPES_VERSION=
-    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/scripts/platformsh-recipes/platformsh/installer.sh" | bash -s
+    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/scripts/platformsh/installer.sh" | bash -s
 ```
 
 If you wish to automatically install and setup most of what this repo provides,
@@ -77,7 +77,7 @@ you can append `-f` to the `installer.sh` script above:
 hooks:
   build: |
     export PLATFORMSH_RECIPES_VERSION=
-    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/scripts/platformsh-recipes/platformsh/installer.sh" | bash -s -- -f
+    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/scripts/platformsh/installer.sh" | bash -s -- -f
 ```
 
 ### Tools
