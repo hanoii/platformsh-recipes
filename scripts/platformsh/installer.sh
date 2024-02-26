@@ -27,7 +27,7 @@ wget -qO- https://github.com/hanoii/platformsh-recipes/archive/${PLATFORMSH_RECI
 echo "${PLATFORMSH_RECIPES_VERSION}" > $PLATFORMSH_RECIPES_INSTALLDIR/version
 if [[ -n "$full" ]]; then
   # Install tools
-  $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh-recipes/platformsh/build.sh
+  $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/build.sh
   echo "export PLATFORMSH_RECIPES_INSTALLDIR=$PLATFORMSH_RECIPES_INSTALLDIR" >> $PLATFORM_APP_DIR/.environment
   echo "source $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
   echo "source $PLATFORMSH_RECIPES_INSTALLDIR/.platformsh-recipes/scripts/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
