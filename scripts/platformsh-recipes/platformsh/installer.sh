@@ -5,7 +5,7 @@ set -euo pipefail
 
 full=
 while getopts "f" option; do
-  case ${opt} in
+  case ${option} in
     f)
       full=1
       ;;
