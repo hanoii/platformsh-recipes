@@ -5,7 +5,9 @@ A collection of scripts, commands, recipes and notes for platform.sh
 <!-- toc -->
 
 - [Platform.sh setup](#platformsh-setup)
-  * [Tools](#tools)
+  * [Build](#build)
+  * [.environment](#environment)
+  * [.bashrc](#bashrc)
 - [Performance troubleshooting](#performance-troubleshooting)
   * [ahoy commans](#ahoy-commans)
   * [Time/memory used](#timememory-used)
@@ -49,6 +51,9 @@ hooks:
     # cp /tmp/platformsh-recipes/.ahoy.platformsh-recipes.yml $PLATFORM_APP_DIR/.ahoy.yml
     cd $start_pwd
     rm -fr /tmp/platformsh-recipes
+    # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
+    # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
+
     echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
 ```
 
@@ -81,7 +86,7 @@ variables:
   PLATFORMSH_RECIPES_MAIN_BRANCH: main
 ```
 
-### Tools
+### Build
 
 There are different tools that I usually add to platform, some of them are
 required by the commands referenced below.
@@ -90,25 +95,36 @@ You can take what you want from
 [this repo's build.sh](scripts/platformsh-recipes/platformsh/build.sh) or
 install them all by uncomment the following line in the build recipe above.
 
-```yml
-hooks:
-  build: |
-    # Install tools
+```
     # ./scripts/platformsh-recipes/platformsh/build.sh
 ```
+
+### .environment
 
 Some of this tools also needs additions to [Platform.sh's .environment
 file][platformsh-environment]. You can also take what you need from
 [this repo's .environment](scripts/platformsh-recipes/platformsh/.environment)
-or source it directly by adding the following to your `.environment` file (**if
-you are executing the biuld.sh, doing this is also necessary**):
+or uncomment the following line in the build recipe above (**if you are
+executing the build.sh, doing this is also necessary**):
 
 ```
-source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.environment
+    # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
 ```
 
 [platformsh-environment]:
   https://docs.platform.sh/development/variables/set-variables.html#testing-environment-scripts
+
+### .bashrc
+
+Finally, it also requires things to be added to a project's own .bashrc. You can
+take what you want from
+[this repo's .bashrc](scripts/platformsh-recipes/platformsh/.bashrc) or
+uncomment the following line in the build recipe above (**if you are executing
+the build.sh, doing this is also necessary**):
+
+```
+    # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
+```
 
 ## Performance troubleshooting
 
