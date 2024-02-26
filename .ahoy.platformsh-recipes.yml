@@ -3,36 +3,36 @@ commands:
 
   log:php:
     usage: Get lines of /var/log/php.access.log with useful filters
-    cmd: ./scripts/platformsh-recipes/logs/php.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/php.sh "$@"
 
   log:php:rpm:
     usage: Get rpm out of /var/log/php.access.log
-    cmd: ./scripts/platformsh-recipes/logs/php-rpm.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/php-rpm.sh "$@"
 
   log:php:top:
     usage: Get a sorted list of php pages by time. (--mem to sort by memory usage)
-    cmd: ./scripts/platformsh-recipes/logs/php-top.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/php-top.sh "$@"
 
   log:access:
     usage: Get lines of /var/log/access.log with useful filters
-    cmd: ./scripts/platformsh-recipes/logs/access.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/access.sh "$@"
 
   log:access:rpm:
     usage: Get rpm out of /var/log/access.log
-    cmd: ./scripts/platformsh-recipes/logs/access-rpm.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/access-rpm.sh "$@"
 
   log:ipblock:
     usage: Block BAD IPs
-    cmd: ./scripts/platformsh-recipes/logs/ipblock.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/ipblock.sh "$@"
 
   log:push:
     usage: See the latest push activity log
-    cmd: ./scripts/platformsh-recipes/commands/log-push.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/log-push.sh "$@"
 
   log:push:list:
     usage: See the latest push activities
-    cmd: ./scripts/platformsh-recipes/commands/log-push-list.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/log-push-list.sh "$@"
 
   ipblock:
     usage: Add IP to the block list
-    cmd: ./scripts/platformsh-recipes/commands/ipblock.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/ipblock.sh "$@"

@@ -27,7 +27,7 @@ echo "${PLATFORMSH_RECIPES_VERSION}" > .platformsh-recipes/version
 if [[ -n "$full" ]]; then
   # Install tools
   ./.platformsh-recipes/scripts/platformsh-recipes/platformsh/build.sh
-  echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
-  echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
+  echo "source $PLATFORM_APP_DIR/.platformsh-recipes/scripts/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
+  echo "source $PLATFORM_APP_DIR/.platformsh-recipes/scripts/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
 fi
 echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
