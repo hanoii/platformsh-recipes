@@ -3,4 +3,4 @@ commands:
 
   log:php:
     usage: Get lines of /var/log/php.access.log with useful filters
-    cmd: ./scripts/logs/php.sh
+    cmd: ./scripts/platformsh-recipes/logs/php.sh

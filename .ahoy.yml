@@ -14,4 +14,4 @@ commands:
   platform:
     usage: List the common platform commands
     imports:
-      - ./.ahoy.platform.yml
+      - ./.ahoy.platform-recipes.yml
