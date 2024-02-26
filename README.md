@@ -5,9 +5,11 @@ A collection of scripts, commands, recipes and notes for platform.sh
 <!-- toc -->
 
 - [Platform.sh setup](#platformsh-setup)
+  * [`.platform.app.yaml` tweaks](#platformappyaml-tweaks)
   * [Build](#build)
-  * [.environment](#environment)
-  * [.bashrc](#bashrc)
+  * [Tools](#tools)
+  * [`.environment`](#environment)
+  * [`.bashrc`](#bashrc)
 - [Performance troubleshooting](#performance-troubleshooting)
   * [ahoy commans](#ahoy-commans)
   * [Time/memory used](#timememory-used)
@@ -22,39 +24,7 @@ A collection of scripts, commands, recipes and notes for platform.sh
 
 ## Platform.sh setup
 
-The following needs you to get the scripts and any other necessary bits on your
-app on platform.sh, to do that you can add something like the following to your
-build hook:
-
-**Notes**:
-
-- update `COMMIT-SHA1` with the commit you want to pull.
-- Review the `cp` lines below and adapt as necessary to fit your projects,
-  basically copy over whatever you need from the repo based on your needs.
-- [ahoy](#tools) needs to be installed in the app container if you are going to
-  use ahoy commands.
-
-```yml
-hooks:
-  build: |
-    ##
-    # Get the content of https://github.com/hanoii/platformsh-recipes.
-    ###
-    start_pwd=$PWD
-    echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing hanoii/platformsh-recipes...\033[0m"
-    mkdir -p /tmp/platformsh-recipes
-    cd /tmp/platformsh-recipes
-    wget -qO- https://github.com/hanoii/platformsh-recipes/archive/COMMIT-SHA1.tar.gz | tar -zxf - --strip-component=1 -C /tmp/platformsh-recipes
-    # Install tools
-    # ./scripts/platformsh-recipes/platformsh/build.sh
-    cp -R /tmp/platformsh-recipes/scripts $PLATFORM_APP_DIR
-    # cp /tmp/platformsh-recipes/.ahoy.platformsh-recipes.yml $PLATFORM_APP_DIR/.ahoy.yml
-    cd $start_pwd
-    rm -fr /tmp/platformsh-recipes
-    # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
-    # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
-    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
-```
+### `.platform.app.yaml` tweaks
 
 For the php logs commands, we need to alter php.access.log format so that in
 includes more data, to do that add/amend the following on your
@@ -87,43 +57,53 @@ variables:
 
 ### Build
 
+First of all, you should get the files on this repo onto a platform.sh
+container.
+
+To do so, you can add the following to your build hook (**please provide the
+commit sha of the repo for `PLATFORMSH_RECIPES_VERSION`**) :
+
+```yml
+hooks:
+  build: |
+    export PLATFORMSH_RECIPES_VERSION=
+    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/scripts/platformsh-recipes/platformsh/installer.sh" | bash -s
+```
+
+If you wish to automatically install and setup most of what this repo provides,
+you can append `-f` to the `installer.sh` script above:
+
+```yml
+hooks:
+  build: |
+    export PLATFORMSH_RECIPES_VERSION=
+    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/scripts/platformsh-recipes/platformsh/installer.sh" | bash -s -- -f
+```
+
+### Tools
+
 There are different tools that I usually add to platform, some of them are
 required by the commands referenced below.
 
-You can take what you want from
-[this repo's build.sh](scripts/platformsh-recipes/platformsh/build.sh) or
-install them all by uncomment the following line in the build recipe above.
+If you haven't used the `-f` version of the installer, you can take what you
+want from
+[this repo's build.sh](scripts/platformsh-recipes/platformsh/build.sh).
 
-```
-    # ./scripts/platformsh-recipes/platformsh/build.sh
-```
-
-### .environment
+### `.environment`
 
 Some of this tools also needs additions to [Platform.sh's .environment
-file][platformsh-environment]. You can also take what you need from
-[this repo's .environment](scripts/platformsh-recipes/platformsh/.environment)
-or uncomment the following line in the build recipe above (**if you are
-executing the build.sh, doing this is also necessary**):
-
-```
-    # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
-```
+file][platformsh-environment]. If you haven't used the `-f` version of the
+installer, you can take what you want from
+[this repo's .environment](scripts/platformsh-recipes/platformsh/.environment).
 
 [platformsh-environment]:
   https://docs.platform.sh/development/variables/set-variables.html#testing-environment-scripts
 
-### .bashrc
+### `.bashrc`
 
-Finally, it also requires things to be added to a project's own .bashrc. You can
-take what you want from
-[this repo's .bashrc](scripts/platformsh-recipes/platformsh/.bashrc) or
-uncomment the following line in the build recipe above (**if you are executing
-the build.sh, doing this is also necessary**):
-
-```
-    # echo "source $PLATFORM_APP_DIR/scripts/platformsh-recipes/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
-```
+Finally, it also requires things to be added to a project's own .bashrc. If you
+haven't used the `-f` version of the installer, you can take what you want from
+[this repo's .bashrc](scripts/platformsh-recipes/platformsh/.bashrc).
 
 ## Performance troubleshooting
 

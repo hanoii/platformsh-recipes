@@ -1,6 +1,11 @@
 #!/bin/bash
 # Platform.sh recipes installer
 
+if [[ -z "$PLATFORMSH_RECIPES_VERSION" ]]; then
+  echo "Error: PLATFORMSH_RECIPES_VERSION not provided!"
+  exit 1
+fi
+
 set -euo pipefail
 
 full=
@@ -18,6 +23,7 @@ done
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing hanoii/platformsh-recipes...\033[0m"
 mkdir -p .platformsh-recipes
 wget -qO- https://github.com/hanoii/platformsh-recipes/archive/${PLATFORMSH_RECIPES_VERSION}.tar.gz | tar -zxf - --strip-component=1 -C .platformsh-recipes
+echo "${PLATFORMSH_RECIPES_VERSION}" > .platformsh-recipes/version
 if [[ -n "$full" ]]; then
   # Install tools
   ./.platformsh-recipes/scripts/platformsh-recipes/platformsh/build.sh
