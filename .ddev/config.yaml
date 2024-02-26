@@ -1,4 +1,4 @@
-name: platformsh
+name: platformsh-recipes
 type: php
 docroot: ""
 php_version: "8.1"

@@ -5,7 +5,8 @@ A collection of scripts, commands, recipes and notes for platform.sh
 <!-- toc -->
 
 - [Performance troubleshooting](#performance-troubleshooting)
-  * [ahoy commands](#ahoy-commands)
+  * [Platform.sh setup](#platformsh-setup)
+  * [ahoy commans](#ahoy-commans)
   * [Time/memory used](#timememory-used)
   * [404s](#404s)
   * [User-Agents](#user-agents)
@@ -18,7 +19,71 @@ A collection of scripts, commands, recipes and notes for platform.sh
 
 ## Performance troubleshooting
 
-### ahoy commands
+The commands here can also be used to test and access platform projects locally,
+to do that you need to make available the following environment variables:
+
+- `PLATFORMSH_CLI_TOKEN`
+- `PLATFORM_PROJECT`
+- `PLATFORMSH_RECIPES_MAIN_BRANCH=main` (optional, defaults to `master`)
+
+### Platform.sh setup
+
+The following needs you to get the scripts and any other necessary bits on your
+app on platform.sh, to do that you can add something like the following to your
+build hook:
+
+**Notes**:
+
+- update `COMMIT-SHA1` with the commit you want to pull.
+- Review the `cp` lines below and adapt as necessary to fit your projects,
+  basically copy over whatever you need from the repo based on your needs.
+
+```yml
+hooks:
+  build: |
+    ##
+    # Get the content of https://github.com/hanoii/platformsh-recipes.
+    ###
+    echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing hanoii/platformsh-recipes...\033[0m"
+    mkdir -p /tmp/platformsh-recipes
+    cd /tmp/platformsh-recipes
+    wget -qO- https://github.com/hanoii/platformsh-recipes/archive/COMMIT-SHA1.tar.gz | tar -zxf - --strip-component=1 -C /tmp/platformsh-recipes
+    cp -R /tmp/platformsh-recipes/scripts $PLATFORM_APP_DIR
+    # cp /tmp/platformsh-recipes/.ahoy.platformsh-recipes.yml $PLATFORM_APP_DIR/.ahoy.yml
+    rm -fr /tmp/platformsh-recipes
+    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
+```
+
+For the php logs commands, we need to alter php.access.log format so that in
+includes more data, to do that add/amend the following on your
+`.platform.app.yml`:
+
+```yml
+web:
+  commands:
+    pre_start: $PLATFORM_APP_DIR/scripts/platformsh-recipes/pre-start.sh
+    start: /usr/bin/start-php-app -y "$PLATFORM_APP_DIR/.deploy/php-fpm.conf"
+```
+
+And the following to your mounts
+
+```yml
+mounts:
+  "/.deploy":
+    source: local
+    source_path: "deploy"
+```
+
+And if your production environment is other than master, some scripts reference
+the main environment through `PLATFORMSH_RECIPES_MAIN_BRANCH` environment
+variable:
+
+```yml
+variables:
+  PLATFORMSH_RECIPES_MAIN_BRANCH: main
+```
+
+### ahoy commans
 
 All of the ahoy commands below have the following flags
 
@@ -72,7 +137,8 @@ performance, and was quite a bit.
   also added some early blocking in [settings.php][settings-php-block].
 
 [fast_404]: https://www.drupal.org/project/fast_404
-[settings-php-block]: https://gitlab.com/confcats/catalyze/-/blob/master/settings/settings.php#L7-24
+[settings-php-block]:
+  https://gitlab.com/confcats/catalyze/-/blob/master/settings/settings.php#L7-24
 
 One curious snippet is:
 
