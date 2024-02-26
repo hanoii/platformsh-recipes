@@ -43,7 +43,7 @@ mkdir -p ~/.fzf
 cd ~/.fzf
 git init
 git remote add origin https://github.com/junegunn/fzf.git
-git fetch --depth 1 origin d7d2ac39513f2068f70fbe717d212c9bce8750ed
+git fetch --depth 1 origin 3dd42f5aa2d7fc6f508f2b21408730a8678c0a19
 git checkout FETCH_HEAD
 ./install --no-update-rc
 cd -

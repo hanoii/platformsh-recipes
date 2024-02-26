@@ -38,6 +38,7 @@ hooks:
     ##
     # Get the content of https://github.com/hanoii/platformsh-recipes.
     ###
+    start_pwd=$PWD
     echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing hanoii/platformsh-recipes...\033[0m"
     mkdir -p /tmp/platformsh-recipes
     cd /tmp/platformsh-recipes
@@ -46,6 +47,7 @@ hooks:
     # ./scripts/platformsh-recipes/platformsh/build.sh
     cp -R /tmp/platformsh-recipes/scripts $PLATFORM_APP_DIR
     # cp /tmp/platformsh-recipes/.ahoy.platformsh-recipes.yml $PLATFORM_APP_DIR/.ahoy.yml
+    cd $start_pwd
     rm -fr /tmp/platformsh-recipes
     echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
 ```
