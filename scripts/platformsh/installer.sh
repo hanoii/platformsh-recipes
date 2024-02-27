@@ -33,3 +33,4 @@ if [[ -n "$full" ]]; then
   echo "source $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
 fi
 echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
+ln -s $PLATFORMSH_RECIPES_INSTALLDIR/.ahoy.platformsh-recipes.yml $PLATFORM_APP_DIR/
