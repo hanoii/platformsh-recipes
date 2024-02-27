@@ -29,7 +29,8 @@ if [[ -n "$full" ]]; then
   # Install tools
   $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/build.sh
   echo "export PLATFORMSH_RECIPES_INSTALLDIR=$PLATFORMSH_RECIPES_INSTALLDIR" >> $PLATFORM_APP_DIR/.environment
-  echo "source $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
+  # Using . instead of source so it's dash-compatible.
+  echo ". $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
   echo "source $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/.bashrc" >> $PLATFORM_APP_DIR/.bashrc
 fi
 echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
