@@ -58,7 +58,7 @@ while true ; do
         "") shift 2 ;;
         *)
           perl_show='[\$4] \$10 \$3 \$11\$12'
-          grep_after="| grep -a '$2'"
+          grep_before="| grep -a '$2'"
           shift 2 ;;
         esac ;;
     --404)
