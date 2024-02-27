@@ -87,14 +87,14 @@ required by the commands referenced below.
 
 If you haven't used the `-f` version of the installer, you can take what you
 want from
-[this repo's build.sh](scripts/platformsh-recipes/platformsh/build.sh).
+[this repo's build.sh](scripts/platformsh/build.sh).
 
 ### `.environment`
 
 Some of this tools also needs additions to [Platform.sh's .environment
 file][platformsh-environment]. If you haven't used the `-f` version of the
 installer, you can take what you want from
-[this repo's .environment](scripts/platformsh-recipes/platformsh/.environment).
+[this repo's .environment](scripts/platformsh/.environment).
 
 [platformsh-environment]:
   https://docs.platform.sh/development/variables/set-variables.html#testing-environment-scripts
@@ -103,7 +103,7 @@ installer, you can take what you want from
 
 Finally, it also requires things to be added to a project's own .bashrc. If you
 haven't used the `-f` version of the installer, you can take what you want from
-[this repo's .bashrc](scripts/platformsh-recipes/platformsh/.bashrc).
+[this repo's .bashrc](scripts/platformsh/.bashrc).
 
 ## Performance troubleshooting
 
