@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e -o pipefail
 
+if [[ -z "$PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST" ]]; then
+  >&2 echo -e "\033[0;31mError: PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST not provided!\033[0m"
+  exit 1
+fi
+
+if [[ -z "$PLATFORMSH_RECIPES_IPBLOCK_WHITELIST" ]]; then
+  >&2 echo -e "\033[0;33mWarning: no PLATFORMSH_RECIPES_IPBLOCK_WHITELIST provided!\033[0m"
+fi
+
 cmd=ahoy
 if [ -z "$PLATFORM_APPLICATION_NAME" ]; then
   cmd="$cmd platform"
@@ -9,7 +18,12 @@ httpaccess=$(platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} 2>&
 # { grep deny || test $? = 1; } from https://stackoverflow.com/a/49627999
 blocked_ips=($(echo "$httpaccess" | { grep deny || test $? = 1; }  | perl -pe "s/.*?address: ([^\s\/]*).*/\$1/" | xargs -I {} echo '{}' | xargs))
 blocked_already=$(echo "$httpaccess" | { grep deny || test $? = 1; }  | perl -pe "s/.*?address: ([^\s]*).*/\$1/" | xargs -I {} echo '--access deny:{}' | xargs)
-cmd_str="$cmd log:access --ip --extra 'grep -Pi \"select[^a-zA-Z0-9_\-\/\s]|\.env|sysgmdate(\(|%28)|wp-content|wp-admin|go-http-client|(?<!/index)\.php|\.jsp HTTP|\.html HTTP\"' $@"
+# The first grep is a whitelist, the second
+cmd_extra="grep -Pi \"$PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST\""
+if [[ -n "$PLATFORMSH_RECIPES_IPBLOCK_WHITELIST" ]]; then
+  cmd_extra="grep -vPi \"$PLATFORMSH_RECIPES_IPBLOCK_WHITELIST\" | grep -Pi \"select[^a-zA-Z0-9_\-\/\s]|\.env|sysgmdate(\(|%28)|wp-content|wp-admin|go-http-client|(?<!/index)\.php|\.jsp HTTP|\.html HTTP\""
+fi
+cmd_str="$cmd log:access --ip --extra '$cmd_extra' $@"
 >&2 echo -e "\033[0;36mRunning '$cmd_str'...\033[0m"
 ips=$(eval $cmd_str 2> /dev/null)
 OLDIFS=$IFS

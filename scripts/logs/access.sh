@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-OPTIONS=`getopt -o '' -l raw,extra:,days:,ip::,ua::,uri::,path::,404,not-404,all -- "$@"`
+OPTIONS=`getopt -o '' -l raw,extra:,days:,ip::,ua::,uri::,path::,status:,404,not-404,all -- "$@"`
 eval set -- "$OPTIONS"
 
 
@@ -19,7 +19,7 @@ grep_date='| grep -a "'"$date"'"'
 # $9 ua
 
 perl_start='| perl -pe "s/(.*?) - .*\[([^:]*:[^:]*:[^:]*).*?\] \"(.*?) (.*?)(\?.*?)? (.*?)\" (\d+) \d+ (\".*?\") (\".*?\")/'
-perl_show='[\$6] \$1 \"\$3 \$4\$5\" \$8 \$9'
+perl_show='[\$7] \$1 \"\$3 \$4\$5\" \$8 \$9'
 perl_end='/"'
 
 grep_before=''
@@ -75,6 +75,8 @@ while true ; do
           grep_after="| grep -a '$2'"
           shift 2 ;;
       esac ;;
+    --status)
+      grep_after='| grep -a "\['$2'\] "' ; shift 2 ;;
     --all)
       grep_date='' ; shift ;;
     --404)

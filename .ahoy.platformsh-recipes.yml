@@ -33,6 +33,10 @@ commands:
     usage: See the latest push activities
     cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/log-push-list.sh "$@"
 
-  ipblock:
+  ipblock:add:
     usage: Add IP to the block list
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/ipblock.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/ipblock-add.sh "$@"
+
+  ipblock:rm:
+    usage: Remove IP from the block list
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/ipblock-remove.sh "$@"
