@@ -1,13 +1,18 @@
 #!/bin/bash
 set -e -o pipefail
 
+if [[ -z "$PLATFORMSH_CLI_TOKEN" ]]; then
+  >&2 echo -e "\033[0;31mError: PLATFORMSH_CLI_TOKEN not available!\033[0m"
+  exit 1
+fi
+
 if [[ -z "$PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST" ]]; then
-  >&2 echo -e "\033[0;31mError: PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST not provided!\033[0m"
+  >&2 echo -e "\033[0;31mError: PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST not available!\033[0m"
   exit 1
 fi
 
 if [[ -z "$PLATFORMSH_RECIPES_IPBLOCK_WHITELIST" ]]; then
-  >&2 echo -e "\033[0;33mWarning: no PLATFORMSH_RECIPES_IPBLOCK_WHITELIST provided!\033[0m"
+  >&2 echo -e "\033[0;33mWarning: PLATFORMSH_RECIPES_IPBLOCK_WHITELIST not available, this could be fine.\033[0m"
 fi
 
 httpaccess=$(platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} 2>&1)
