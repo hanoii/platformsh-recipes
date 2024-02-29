@@ -1,5 +1,11 @@
 ahoyapi: v2
 commands:
+  version:
+    usage: Show related environment variables
+    cmd: |
+      echo -e "\033[0;32m"
+      set | grep -e ^PLATFORMSH_RECIPES_
+      echo -e "\033[0m"
 
   log:php:
     usage: Get lines of /var/log/php.access.log with useful filters
