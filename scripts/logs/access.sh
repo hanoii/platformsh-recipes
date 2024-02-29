@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-OPTIONS=`getopt -o '' -l raw,extra:,days:,ip::,ua::,uri::,path::,status:,404,not-404,all -- "$@"`
+OPTIONS=`getopt -o '' -l raw,extra:,days:,ip::,ua::,uri::,path::,status:,404,not-404,all,hide-total -- "$@"`
 eval set -- "$OPTIONS"
 
 
@@ -26,6 +26,7 @@ grep_before=''
 grep_after=''
 grep_extra=''
 grep_extension=
+awk_total_output=/dev/stderr
 while true ; do
   case "$1" in
     --raw)
@@ -79,6 +80,8 @@ while true ; do
       grep_after='| grep -a "\['$2'\] "' ; shift 2 ;;
     --all)
       grep_date='' ; shift ;;
+    --hide-total)
+      awk_total_output=/dev/null; shift ;;
     --404)
         grep_extra='| grep -a " 404 "' ; shift ;;
     --not-404)
@@ -92,7 +95,7 @@ while true ; do
 done
 
 cmd='cat /var/log/access.log '"$grep_date"' '"$grep_extra"' '"$grep_extension"' '"$grep_before"' '"$perl_start$perl_show$perl_end"' '"$grep_after"' | sort | uniq -c | sort -n'
-awk='awk '"'"'{sum += $1; print} END {print "\033[1;35m\n>>", sum, "total <<\n\033[0m" > "/dev/stderr"}'"'"
+awk='awk '"'"'{sum += $1; print} END {print "\033[1;35m\n>>", sum, "total <<\n\033[0m" > "'$awk_total_output'"}'"'"
 >&2 printf "\033[0;36mRunning [ %s | %s ]...\033[0m\n" "$cmd" "$awk"
 if [ -z "$PLATFORM_APPLICATION_NAME" ]; then
   platform ssh -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} "$cmd" | eval $awk

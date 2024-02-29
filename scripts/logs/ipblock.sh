@@ -25,7 +25,8 @@ if [[ -n "$PLATFORMSH_RECIPES_IPBLOCK_WHITELIST" ]]; then
 fi
 cmd_str="$cmd log:access --ip --extra '$cmd_extra' $@"
 >&2 echo -e "\033[0;36mRunning '$cmd_str'...\033[0m"
-ips=$(eval $cmd_str 2> /dev/null)
+ips=$(eval $cmd_str 2> /tmp/platformsh-recipes.ipblock.stderr)
+>&2 echo $(</tmp/platformsh-recipes.ipblock.stderr)
 OLDIFS=$IFS
 IFS=$'\n'
 ips_array=($ips)
