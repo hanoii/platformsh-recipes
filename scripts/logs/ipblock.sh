@@ -53,7 +53,9 @@ if [ -n "$block" ]; then
     >&2 echo -e "\n\nIf you want to block the ips, run the following...\n"
     >&2 echo -e "platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} \\\\\n\t\t\\\\\n\t\t$blocked_already \\\\\n\t\t\\\\\n\t\t$block"
   else
-    curl -s -o /dev/null https://apm.blackfire.io/api/v1/events --user "$BLACKFIRE_SERVER_ID:$BLACKFIRE_SERVER_TOKEN" -H "Content-type: application/json" -H "Accept: application/json" -d "{\"name\": \"Blocking ips: $block\"}"
+    if [ -n "$BLACKFIRE_SERVER_ID" ] && [ -n "$BLACKFIRE_SERVER_TOKEN" ]; then
+      curl -s -o /dev/null https://apm.blackfire.io/api/v1/events --user "$BLACKFIRE_SERVER_ID:$BLACKFIRE_SERVER_TOKEN" -H "Content-type: application/json" -H "Accept: application/json" -d "{\"name\": \"Blocking ips: $block\"}"
+    fi
     platform httpaccess -W $blocked_already $block
   fi
 fi
