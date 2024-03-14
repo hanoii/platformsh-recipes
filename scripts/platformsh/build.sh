@@ -19,7 +19,7 @@ wget http://ftp.us.debian.org/debian/pool/main/libu/libutempter/libutempter0_1.1
 ar x libutempter0_1.1.6-3_amd64.deb
 tar -xf data.tar.xz
 cd
-mv /tmp/libutempter0/usr/lib/* .global/lib
+cp -R /tmp/libutempter0/usr/lib .global
 rm -fr /tmp/libutempter0
 echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing screen!\n\033[0m"
 
