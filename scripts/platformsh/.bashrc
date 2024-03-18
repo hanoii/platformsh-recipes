@@ -1,4 +1,4 @@
-eval "$(${PLATFORM_APP_DIR}/.global/bin/fzf --bash)"
+eval "$(fzf --bash)"
 
 # Allow colon(:) in autocomplete, mostly for the ahoy below
 COMP_WORDBREAKS=${COMP_WORDBREAKS//:}

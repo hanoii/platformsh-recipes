@@ -5,5 +5,5 @@ export LD_LIBRARY_PATH="${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
 # dash does not support every bashism and this file is also sourced by dash
 # and dash is used in many places on platform.
 if [ -n "$PLATFORM_APP_DIR" -a -n "$BASH" ]; then
-  [ -f ~/.bashrc ] && source ~/.bashrc
+  [ -f $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/.bashrc ] && source $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/.bashrc
 fi
