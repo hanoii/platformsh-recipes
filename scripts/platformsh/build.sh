@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+mkdir -p .global/bin
+
 ##
 # Install screen package and its dependencies
 ###
