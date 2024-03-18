@@ -29,13 +29,13 @@ echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing screen!\n\033
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing pv...\033[0m"
 mkdir -p /tmp/pv
 cd /tmp/pv
-wget -nv http://http.us.debian.org/debian/pool/main/h/htop/htop_2.2.0-1+b1_amd64.deb
-ar x htop_2.2.0-1+b1_amd64.deb
+wget -nv http://ftp.us.debian.org/debian/pool/main/p/pv/pv_1.6.6-1_amd64.deb
+ar x pv_1.6.6-1_amd64.deb
 tar -xf data.tar.xz
 cd
-mv /tmp/htop/usr/bin/htop .global/bin
-rm -fr /tmp/htop
-echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing htop!\n\033[0m"
+mv /tmp/pv/usr/bin/pv .global/bin
+rm -fr /tmp/pv
+echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing pv!\n\033[0m"
 
 ##
 # Install htop
