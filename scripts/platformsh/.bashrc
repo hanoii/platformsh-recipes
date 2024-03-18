@@ -1,4 +1,4 @@
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+eval "$(fzf --bash)"
 
 # Allow colon(:) in autocomplete, mostly for the ahoy below
 COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
