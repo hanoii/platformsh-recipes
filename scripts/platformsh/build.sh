@@ -23,6 +23,7 @@ tar -xf data.tar.xz
 cd
 cp -R /tmp/libutempter0/usr/lib .global
 rm -fr /tmp/libutempter0
+echo "defscrollback 1000000" >> ~/.screenrc
 echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing screen!\n\033[0m"
 
 ##
