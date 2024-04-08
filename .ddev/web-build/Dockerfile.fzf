@@ -1,2 +1,0 @@
-#ddev-generated
-RUN mkdir -p /opt/fzf && cd /opt/fzf && git init && git remote add origin https://github.com/junegunn/fzf.git && git fetch --depth 1 origin 1a9ea6f738cfafab83a5e0e828e60f0bf68bffee && git checkout FETCH_HEAD && /opt/fzf/install --all && cp /root/.fzf.bash /opt

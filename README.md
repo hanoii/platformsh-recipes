@@ -86,8 +86,7 @@ There are different tools that I usually add to platform, some of them are
 required by the commands referenced below.
 
 If you haven't used the `-f` version of the installer, you can take what you
-want from
-[this repo's build.sh](scripts/platformsh/build.sh).
+want from [this repo's build.sh](scripts/platformsh/build.sh).
 
 ### `.environment`
 

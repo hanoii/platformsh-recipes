@@ -1,0 +1,10 @@
+#ddev-generated
+ahoyapi: v2
+commands:
+  push:log:
+    usage: See the latest push activity log
+    cmd: .ddev/platformsh-lite/scripts/push-log.sh "$@"
+
+  db:pull:
+    usage: Pull database from the production environment.
+    cmd: DDEV_PLATFORMSH_LITE_HELP_CMD="ahoy platform db:pull" .ddev/platformsh-lite/scripts/db-pull.sh "$@"

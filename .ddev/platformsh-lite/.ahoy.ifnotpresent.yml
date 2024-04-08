@@ -1,0 +1,9 @@
+#ddev-generated
+
+# You can copy or use this file as a starting point for your root .ahoy.yml
+ahoyapi: v2
+commands:
+  platform:
+    usage: 'Platform commands'
+    imports:
+      - .ddev/platformsh-lite/.ahoy.platformsh-lite.yml

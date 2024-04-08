@@ -1,11 +1,14 @@
 #ddev-generated
 # To upgrade: ddev get https://github.com/hanoii/ddev-platformsh-lite/tarball/master
 # If you wish to maintain this file differently, remove #ddev-generated above.
-# @see https://github.com/hanoii/ddev-platformsh-lite
+
+fail_on_hook_fail: true
 web_environment:
   # Avoid checking for updates, as it will be updated on start.
   - PLATFORMSH_CLI_UPDATES_CHECK=0
 hooks:
+  pre-start:
+    - exec-host: .ddev/platformsh-lite/scripts/check-platformsh-cli-token.sh
   post-start:
     # Run add-on platform.sh commands to startup
     #
@@ -20,4 +23,4 @@ hooks:
     # For drupal/drush it's recommended to be added after
     # - composer: install
     #
-    - exec: 'bash /var/www/html/.ddev/platformsh-lite-addon-post-start.sh'
+    - exec: /var/www/html/.ddev/platformsh-lite/hooks/post-start.sh

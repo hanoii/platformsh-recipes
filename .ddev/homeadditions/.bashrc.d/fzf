@@ -1,3 +1,0 @@
-#ddev-generated
-
-[ -f /opt/.fzf.bash ] && source /opt/.fzf.bash
