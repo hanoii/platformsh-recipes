@@ -1,7 +1,5 @@
 #!/bin/bash
 
-mkdir -p .cache/.deploy
-
 PLATFORMSH_RECIPES_INSTALLDIR=.
 source $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/functions/conditional-run.sh
 export PLATFORM_APP_DIR=.cache
@@ -32,11 +30,13 @@ platformsh_recipes_cr_preset_drupal_composer
 
 platformsh_recipes_cr_cleanup
 
-platformsh_recipes_cr_deploy_store .cache/.deploy
+platformsh_recipes_cr_deploy_should_run "composer" && echo "do composer"
+platformsh_recipes_cr_deploy_store
+platformsh_recipes_cr_deploy_should_run "composer" || echo "do not composer"
 
 # Errors
 platformsh_recipes_cr_init "just one argument"
 platformsh_recipes_cr_get_cache_dir
 platformsh_recipes_cr_should_run
 platformsh_recipes_cr_success
-platformsh_recipes_cr_deploy_store
+{ PLATFORM_APP_DIR=/app platformsh_recipes_cr_deploy_store; }

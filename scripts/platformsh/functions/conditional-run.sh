@@ -59,14 +59,26 @@ platformsh_recipes_cr_cleanup() {
   find "$finddir" -mindepth 2 -type d -mtime +15 -exec rm -rf {} +
 }
 
-platformsh_recipes_cr_deploy_store() {
-  if [ "$#" -lt 1 ] || [ ! -d $1 ] || [ ! -w $1 ]; then
-    >&2 echo -e "\033[0;31m[error/${FUNCNAME[0]}] You need to pass a writable destination directory.\033[0m"
+platformsh_recipes_cr_deploy_should_run() {
+  if [ "$#" -lt 1 ]; then
+    >&2 echo -e "\033[0;31m[error/${FUNCNAME[0]}] You need to pass an ID.\033[0m"
     return 10
   fi
+  local id=$1
+  local hash_filename=".platformsh-recipes.hash.$id"
+  local deploy_dir=$PLATFORM_APP_DIR/.deploy
+  [[ ! -f ${deploy_dir}/.platformsh-recipes/${hash_filename} ]] || ! cmp -s "${deploy_dir}/.platformsh-recipes/${hash_filename}" $hash_filename
+}
 
+platformsh_recipes_cr_deploy_store() {
+  local deploy_dir=$PLATFORM_APP_DIR/.deploy
+  if [ ! -d $deploy_dir ] || [ ! -w $deploy_dir ]; then
+    >&2 echo -e "\033[0;31m[error/${FUNCNAME[0]}] $deploy_dir must be writeable, make sure it's a mount in your .platform.app.yaml.\033[0m"
+    return 10
+  fi
+  mkdir -p $deploy_dir/.platformsh-recipes
   find $1 -maxdepth 1 -name .platformsh-recipes.hash\.\* -not -name \*.bak -exec cp {} {}.bak \;
-  cp .platformsh-recipes.hash.* $1
+  cp .platformsh-recipes.hash.* $deploy_dir/.platformsh-recipes
 }
 
 
