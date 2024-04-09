@@ -89,8 +89,10 @@ platformsh_recipes_cr_preset_drupal_composer() {
   local cache_dir=$(platformsh_recipes_cr_get_cache_dir "composer")
   if platformsh_recipes_cr_should_run "composer"; then
     echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Composer install...\033[0m"
-    composer global require composer/composer:^2
-    export PATH=$(composer global config bin-dir --absolute --quiet):$PATH
+    if [[ $(composer --version 2> /dev/null) =~ ^Composer\ version\ 1 ]]; then
+      composer global require composer/composer:^2
+      export PATH=$(composer global config bin-dir --absolute --quiet):$PATH
+    fi
     composer install --no-interaction --no-dev
     tar -czf ${cache_dir}/cache.tar.gz $(ls -d vendor/ web/core web/modules/contrib web/libraries web/themes/contrib web/profiles/contrib drush/Commands/contrib 2>/dev/null)
     platformsh_recipes_cr_success "composer"
