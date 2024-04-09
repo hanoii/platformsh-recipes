@@ -20,7 +20,9 @@ platformsh_recipes_cr_init() {
   local extra=$2
   local hash_filename=".platformsh-recipes.hash.$id"
   shift 2
-  { echo "$extra"; tar --mtime='1970-01-01' -czf - "$@";} | sha1sum | cut -d ' ' -f 1 > $hash_filename
+  # gzip -n is so that gzip doesn't add timestamp, that's also the reason I am
+  # not using `tar -zcf` instead.
+  { echo "$extra"; tar --mtime='1970-01-01' -cf - "$@";} | gzip -n | sha1sum | cut -d ' ' -f 1 > $hash_filename
   local cache_dir=$(platformsh_recipes_cr_get_cache_dir $id)
   mkdir -p $cache_dir
   # This so that it resets the modification time as it's cleanup unnecessarilly
