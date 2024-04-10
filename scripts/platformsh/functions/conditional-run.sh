@@ -51,7 +51,33 @@ platformsh_recipes_cr_success() {
   cp $hash_filename ${cache_dir}/${hash_filename}
 }
 
-platformsh_recipes_cr_cleanup() {
+platformsh_recipes_cr_cache_store() {
+  if [ "$#" -lt 2 ]; then
+    >&2 echo -e "\033[0;31m[error/${FUNCNAME[0]}] You need to pass an ID paths to archive, accepting other tar commands.\033[0m"
+    return 10
+  fi
+  local id=$1
+  shift
+  local cache_dir=$(platformsh_recipes_cr_get_cache_dir $id)
+  tar -czf ${cache_dir}/cache.tar.gz "$@"
+  echo -e "\033[0;36m$id assets stored in cache!!\033[0m"
+  ls -lha ${cache_dir}/cache.tar.gz
+}
+
+platformsh_recipes_cr_cache_restore() {
+  if [ "$#" -lt 1 ]; then
+    >&2 echo -e "\033[0;31m[error/${FUNCNAME[0]}] You need to pass an ID.\033[0m"
+    return 10
+  fi
+  local id=$1
+  local cache_dir=$(platformsh_recipes_cr_get_cache_dir $id)
+  tar -zxf ${cache_dir}/cache.tar.gz
+  echo -e "\033[0;33m[warning] Using $id assets from cache...\033[0m"
+  ls -lha ${cache_dir}/cache.tar.gz
+}
+
+
+platformsh_recipes_cr_cache_cleanup() {
   local finddir="${PLATFORM_CACHE_DIR}/platformsh-recipes/cr"
   local finddirdu="${PLATFORM_CACHE_DIR}/platformsh-recipes/cr/*"
   if [ -n "$1" ]; then
@@ -102,22 +128,16 @@ platformsh_recipes_cr_preset_drupal_composer() {
     $(echo $PLATFORM_APPLICATION | base64 -d | jq '.type') \
     $hashfiles
 
-  local cache_dir=$(platformsh_recipes_cr_get_cache_dir "composer")
   if platformsh_recipes_cr_should_run "composer"; then
-    echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Composer install...\033[0m"
+    echo -e "\033[0;36mComposer install...\033[0m"
     if [[ $(composer --version 2> /dev/null) =~ ^Composer\ version\ 1 ]]; then
       composer global require composer/composer:^2
       export PATH=$(composer global config bin-dir --absolute --quiet):$PATH
     fi
     composer install --no-interaction --no-dev
-    tar -czf ${cache_dir}/cache.tar.gz $(ls -d vendor/ web/core web/modules/contrib web/libraries web/themes/contrib web/profiles/contrib drush/Commands/contrib 2>/dev/null)
+    platformsh_recipes_cr_cache_store "composer" $(ls -d vendor/ web/core web/modules/contrib web/libraries web/themes/contrib web/profiles/contrib drush/Commands/contrib 2>/dev/null)
     platformsh_recipes_cr_success "composer"
-    echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Composer cache stored!!\033[0m"
-    ls -lha ${cache_dir}/cache.tar.gz
   else
-    echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Using composer dependencies from cache...\033[0m"
-    tar -zxf ${cache_dir}/cache.tar.gz
-    ls -lha ${cache_dir}/cache.tar.gz
-    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done using composer dependencies from cache!\033[0m"
+    platformsh_recipes_cr_cache_restore "composer"
   fi
 }
