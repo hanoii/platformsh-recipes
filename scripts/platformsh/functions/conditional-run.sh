@@ -77,7 +77,7 @@ platformsh_recipes_cr_deploy_store() {
     return 10
   fi
   mkdir -p $deploy_dir/.platformsh-recipes
-  find $1 -maxdepth 1 -name .platformsh-recipes.hash\.\* -not -name \*.bak -exec cp {} {}.bak \;
+  find $deploy_dir/.platformsh-recipes -maxdepth 1 -name .platformsh-recipes.hash\.\* -not -name \*.bak -exec cp {} {}.bak \;
   cp .platformsh-recipes.hash.* $deploy_dir/.platformsh-recipes
 }
 
