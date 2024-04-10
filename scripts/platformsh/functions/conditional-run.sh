@@ -58,9 +58,9 @@ platformsh_recipes_cr_cleanup() {
     finddir="$finddir/$1"
     finddirdu="$finddir"
   fi
-  echo -e "\033[0;35mBuild cache size \033[1;4;35mbefore\033[0;35m cleanup:\033[1;35m\n$(du -hs $finddirdu)\033[0m"
+  echo -e "\033[0;35mBuild cache size \033[1;4;35mbefore\033[0;35m cleanup:\033[1;35m\n$(du -chs $finddirdu)\033[0m"
   find "$finddir" -mindepth 2 -type d -mtime +15 -exec rm -rf {} +
-  echo -e "\033[0;35mBuild cache size \033[1;4;35mafter${_reset}\033[0;35m  cleanup: \033[1;35m\n$(du -hs $finddirdu)\033[0m"
+  echo -e "\033[0;35mBuild cache size \033[1;4;35mafter${_reset}\033[0;35m  cleanup: \033[1;35m\n$(du -chs $finddirdu)\033[0m"
 }
 
 platformsh_recipes_cr_deploy_should_run() {
