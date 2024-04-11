@@ -124,18 +124,30 @@ platformsh_recipes_cr_preset_drupal_composer() {
   if [ -d PATCHES/ ]; then
     hashfiles="$hashfiles PATCHES/"
   fi
+  # This file is included in the hash as it can be changed by
+  # drupal/core-composer-scaffold
+  if [ -d web/.gitignore ]; then
+    hashfiles="$hashfiles web/.gitignore"
+  fi
+  # Also add root .gitignore just in case, it shouldn't change often
+  if [ -d .gitignore ]; then
+    hashfiles="$hashfiles .gitignore"
+  fi
   platformsh_recipes_cr_init "composer" \
     $(echo $PLATFORM_APPLICATION | base64 -d | jq '.type') \
     $hashfiles
 
   if platformsh_recipes_cr_should_run "composer"; then
     echo -e "\033[0;36mComposer install...\033[0m"
+    local date=$(date --iso-8601=seconds)
     if [[ $(composer --version 2> /dev/null) =~ ^Composer\ version\ 1 ]]; then
       composer global require composer/composer:^2
       export PATH=$(composer global config bin-dir --absolute --quiet):$PATH
     fi
+    local composer_dirs=$(ls -d vendor/ web/core web/modules/contrib web/libraries web/themes/contrib web/profiles/contrib drush/Commands/contrib 2>/dev/null)
+    local composer_drupal_extra=$(find web/ -type f -newermt $date -not -path 'web/core*' -not -path 'web/modules/contrib*' -not -path 'web/libraries*' -not -path 'web/themes/contrib*' -not -path 'web/profiles/contrib*')
     composer install --no-interaction --no-dev
-    platformsh_recipes_cr_cache_store "composer" $(ls -d vendor/ web/core web/modules/contrib web/libraries web/themes/contrib web/profiles/contrib drush/Commands/contrib 2>/dev/null)
+    platformsh_recipes_cr_cache_store "composer" $composer_dirs $composer_drupal_extra
     platformsh_recipes_cr_success "composer"
   else
     platformsh_recipes_cr_cache_restore "composer"
