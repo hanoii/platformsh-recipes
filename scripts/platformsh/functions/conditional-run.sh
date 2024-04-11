@@ -116,7 +116,7 @@ platformsh_recipes_cr_deploy_store() {
 
 # Conditionally build and cache composer assets for drupal
 platformsh_recipes_cr_preset_drupal_composer() {
-  local version="1"
+  local version="2"
   local hashfiles="composer.*"
   # Some directories normally present
   if [ -d patches/ ]; then
@@ -135,7 +135,7 @@ platformsh_recipes_cr_preset_drupal_composer() {
     hashfiles="$hashfiles .gitignore"
   fi
   platformsh_recipes_cr_init "composer" \
-    $({ echo $version; echo $PLATFORM_APPLICATION | base64 -d | jq '.type'; }) \
+    "$({ echo $version; echo $PLATFORM_APPLICATION | base64 -d | jq '.type'; })" \
     $hashfiles
 
   if platformsh_recipes_cr_should_run "composer"; then
