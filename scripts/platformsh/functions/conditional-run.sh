@@ -126,11 +126,11 @@ platformsh_recipes_cr_preset_drupal_composer() {
   fi
   # This file is included in the hash as it can be changed by
   # drupal/core-composer-scaffold
-  if [ -d web/.gitignore ]; then
+  if [ -f web/.gitignore ]; then
     hashfiles="$hashfiles web/.gitignore"
   fi
   # Also add root .gitignore just in case, it shouldn't change often
-  if [ -d .gitignore ]; then
+  if [ -f .gitignore ]; then
     hashfiles="$hashfiles .gitignore"
   fi
   platformsh_recipes_cr_init "composer" \
