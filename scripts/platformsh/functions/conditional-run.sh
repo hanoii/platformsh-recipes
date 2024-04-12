@@ -89,7 +89,12 @@ platformsh_recipes_cr_cache_cleanup() {
       find "$dir" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -nr | awk 'FNR > 5 {print $2}' | xargs rm -rf
     fi
   done
-  echo -e "\033[0;35mBuild cache size \033[1;4;35mafter${_reset}\033[0;35m  cleanup: \033[1;35m\n$(du -chs $finddirdu)\033[0m"
+  if [ -n "$PLATFORMSH_RECIPES_VERBOSE" ]; then
+    echo -e "\033[0;35mBuild cache size \033[1;4;35mafter${_reset}\033[0;35m  cleanup: \033[1;35m\n$(du -chs $finddirdu)\033[0m"
+    echo -e "\033[0;35m"
+    ls -la --time-style=long-iso $finddirdu
+    echo -e "\033[0m"
+  fi
 }
 
 platformsh_recipes_cr_deploy_should_run() {
