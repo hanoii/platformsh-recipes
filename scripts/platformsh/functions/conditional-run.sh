@@ -79,22 +79,19 @@ platformsh_recipes_cr_cache_restore() {
 
 platformsh_recipes_cr_cache_cleanup() {
   local finddir="${PLATFORM_CACHE_DIR}/platformsh-recipes/cr"
-  local finddirdu="${PLATFORM_CACHE_DIR}/platformsh-recipes/cr/*"
-  echo -e "\033[0;35mBuild cache size \033[1;4;35mbefore\033[0;35m cleanup:\033[1;35m\n$(du -chs $finddirdu)\033[0m"
   # Cleanup all caches older than 15 days
   find "$finddir" -mindepth 2 -type d -mtime +15 -exec rm -rf {} +
   # Also only kep the latest 5 caches of each ID
+  echo -e "\033[0;35m"
   for dir in "$finddir"/*; do
     if [ -d "$dir" ]; then  # Check if it's a directory
       find "$dir" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -nr | awk 'FNR > 5 {print $2}' | xargs rm -rf
+      du -hs --time $dir/* | awk -F'\t' '{print $2 "\t"  $3 "\t" $1}' | sort
+      echo ""
     fi
   done
-  if [ -n "$PLATFORMSH_RECIPES_VERBOSE" ]; then
-    echo -e "\033[0;35mBuild cache size \033[1;4;35mafter${_reset}\033[0;35m  cleanup: \033[1;35m\n$(du -chs $finddirdu)\033[0m"
-    echo -e "\033[0;35m"
-    ls -la --time-style=long-iso $finddirdu
-    echo -e "\033[0m"
-  fi
+  du -hs --time $finddir | awk -F'\t' '{print "Cache total: " $1}'
+  echo -e "\033[0m"
 }
 
 platformsh_recipes_cr_deploy_should_run() {
