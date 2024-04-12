@@ -1,2 +1,11 @@
-.cache
-.platformsh-recipes.hash.*
+# Ignoring files created by testing with ./test/test-functions.sh
+.platformsh-recipes.hash*
+
+# Ignoring a bunch of stuff present for testing with ./test/test-functions.sh
+/.cache
+/composer*
+/vendor
+/.editorconfig
+/.gitattributes
+/cachethis
+/web
