@@ -141,7 +141,7 @@ platformsh_recipes_cr_preset_drupal_composer() {
   fi
   platformsh_recipes_cr_init "composer" \
     "$({ echo $version; echo $PLATFORM_APPLICATION | base64 -d | jq '.type'; })" \
-    $hashfiles
+    $hashfiles "$@"
 
   if platformsh_recipes_cr_should_run "composer"; then
     echo -e "\033[0;36mComposer install...\033[0m"
