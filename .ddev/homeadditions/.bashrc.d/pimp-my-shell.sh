@@ -9,9 +9,6 @@ esac
 # This is so that child processes have appropriate access to this var
 export SHELL
 
-# Default $EDITOR to vim
-export EDITOR=${DDEV_PIMP_MY_SHELL_EDITOR-/usr/bin/vim}
-
 # ahoy
 COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
 
@@ -34,8 +31,8 @@ function set_win_title(){
   # Shortening $PWD
   # /var/www/html -> /v/w/html
   local short_pwd=$(echo "$PWD" | sed 's/\([^\/]\)[^\/]*\//\1\//g')
-  echo -ne "\033]0; $DDEV_PROJECT ddev@$short_pwd - $@\007"
+  echo -ne "\033]0;$@$DDEV_PROJECT/ddev: $short_pwd\007"
 }
 starship_precmd_user_func="set_win_title"
 eval "$(starship init bash)"
-trap "set_win_title \${BASH_COMMAND}" DEBUG
+trap "set_win_title \"\${BASH_COMMAND} - \"" DEBUG

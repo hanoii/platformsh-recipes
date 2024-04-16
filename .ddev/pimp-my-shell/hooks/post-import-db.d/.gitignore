@@ -1,3 +1,2 @@
 #ddev-generated
-.env
-.env.v*
+*.source

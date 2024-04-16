@@ -3,7 +3,7 @@ repository: https://github.com/hanoii/ddev-platformsh-lite/tarball/main
 version: ""
 dependencies:
     - pimp-my-shell
-install_date: "2024-04-08T12:56:21-03:00"
+install_date: "2024-04-16T18:49:41-03:00"
 project_files:
     - config.platformsh-lite.yaml
     - docker-compose.platformsh-lite.yaml
