@@ -61,7 +61,6 @@ platformsh_recipes_cr_cache_store() {
   local cache_dir=$(platformsh_recipes_cr_get_cache_dir $id)
   tar -czf ${cache_dir}/cache.tar.gz "$@"
   echo -e "\033[0;36m$id assets stored in cache!!\033[0m"
-  ls -lha ${cache_dir}/cache.tar.gz
 }
 
 platformsh_recipes_cr_cache_restore() {
@@ -73,7 +72,6 @@ platformsh_recipes_cr_cache_restore() {
   local cache_dir=$(platformsh_recipes_cr_get_cache_dir $id)
   tar -zxf ${cache_dir}/cache.tar.gz
   echo -e "\033[0;33m[warning] Using $id assets from cache...\033[0m"
-  ls -lha ${cache_dir}/cache.tar.gz
 }
 
 
