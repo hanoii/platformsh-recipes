@@ -21,8 +21,8 @@ function set_win_title() {
   # Shortening $PWD
   # /var/www/html -> /v/w/html
   local short_pwd=$(echo "$PWD" | sed "s|$HOME|~|" | sed 's/\([^\/]\)[^\/]*\//\1\//g')
-  echo -ne "\033]0;$PLATFORMSH_RECIPES_PROJECT_NAME/$PLATFORM_BRANCH: $short_pwd $@\007"
+  echo -ne "\033]0;$@$PLATFORMSH_RECIPES_PROJECT_NAME/$PLATFORM_BRANCH: $short_pwd\007"
 }
 PROMPT_COMMAND=set_win_title
 PS1="\[\033[1m\]\$PLATFORMSH_RECIPES_PROJECT_NAME@\$PLATFORM_BRANCH\[\033[0m\]:\[\033[1m\]\w\[\033[0m\]\$ "
-trap 'cmd="$BASH_COMMAND"; [[ "$cmd" != "$PROMPT_COMMAND" ]] && set_win_title - ${BASH_COMMAND}' DEBUG
+trap 'cmd="$BASH_COMMAND"; [[ "$cmd" != "$PROMPT_COMMAND" ]] && set_win_title ${BASH_COMMAND} "- "' DEBUG
