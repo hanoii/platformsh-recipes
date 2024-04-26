@@ -1,12 +1,6 @@
 #!/bin/bash
 # Platform.sh recipes installer
 
-_latest=$(curl -s "https://api.github.com/repos/hanoii/platformsh-recipes/commits/main" | jq -r '.sha')
-
-if [[ "$PLATFORMSH_RECIPES_VERSION" != "$_latest" ]]; then
-  >&2 echo -e "\033[0;33m[warning] You are not using the latest version: '${_latest}'.\033[0m"
-fi
-
 if [[ -z "$PLATFORMSH_RECIPES_VERSION" ]]; then
   >&2 echo -e "\033[0;31m[error] PLATFORMSH_RECIPES_VERSION not provided!\033[0m"
   exit 1
@@ -45,3 +39,8 @@ if [[ -n "$full" ]]; then
 fi
 echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
 ln -s $PLATFORMSH_RECIPES_INSTALLDIR/.ahoy.platformsh-recipes.yml $PLATFORM_APP_DIR/
+
+_latest=$(curl -s "https://api.github.com/repos/hanoii/platformsh-recipes/commits/main" | jq -r '.sha')
+if [[ "$PLATFORMSH_RECIPES_VERSION" != "$_latest" ]]; then
+  >&2 echo -e "\033[0;33m[warning] You are not using the latest version: '${_latest}'.\033[0m"
+fi
