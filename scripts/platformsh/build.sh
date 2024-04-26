@@ -24,6 +24,7 @@ cd
 cp -R /tmp/libutempter0/usr/lib .global
 rm -fr /tmp/libutempter0
 echo "defscrollback 1000000" >> ~/.screenrc
+echo 'shell -$SHELL' >> ~/.screenrc
 
 ##
 # Install pv
