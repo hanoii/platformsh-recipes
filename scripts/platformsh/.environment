@@ -1,5 +1,6 @@
 # For libraries installed on build hook for some of the apps
 export LD_LIBRARY_PATH="${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
+export TERMINFO_DIRS="${PLATFORM_APP_DIR}/.global/terminfo:"
 
 # Only run the below code for bash, bear in mind that
 # dash does not support every bashism and this file is also sourced by dash
