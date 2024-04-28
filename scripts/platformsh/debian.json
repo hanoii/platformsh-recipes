@@ -35,7 +35,7 @@
       "http://ftp.us.debian.org/debian/pool/main/l/logrotate/logrotate_3.18.0-2+deb11u2_amd64.deb"
     ]
   },
-  "colorzired-logs": {
+  "colorized-logs": {
     "10": [
       "http://ftp.us.debian.org/debian/pool/main/c/colorized-logs/colorized-logs_2.4-1_amd64.deb"
     ],
