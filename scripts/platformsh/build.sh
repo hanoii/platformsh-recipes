@@ -6,7 +6,7 @@ function install_debian() {
   mkdir -p $PLATFORM_APP_DIR/.global/lib
   mkdir -p $PLATFORM_APP_DIR/.global/terminfo
   local pkg=$1
-  echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing $pkg...\033[0m"
+  echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $pkg packages...\033[0m"
   local debian_version=
   read -d . debian_version < /etc/debian_version
   local pkgs=($(cat $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/debian.json | jq -r ".\"$pkg\" | .\"$debian_version\" | .[]" 2> /dev/null))
