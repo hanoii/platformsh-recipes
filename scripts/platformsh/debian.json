@@ -58,13 +58,13 @@
   },
   "kitty-terminfo": {
     "_readme": [
-      "bullseye(11) versions work on buster(10), so using the same on both"
+      "Using unstable version that should work everywhere as it's just a terminfo"
     ],
     "10": [
-      "http://ftp.us.debian.org/debian/pool/main/k/kitty/kitty-terminfo_0.19.3-1_all.deb"
+      "http://ftp.us.debian.org/debian/pool/main/k/kitty/kitty-terminfo_0.33.1-1_all.deb"
     ],
     "11": [
-      "http://ftp.us.debian.org/debian/pool/main/k/kitty/kitty-terminfo_0.19.3-1_all.deb"
+      "http://ftp.us.debian.org/debian/pool/main/k/kitty/kitty-terminfo_0.33.1-1_all.deb"
     ]
   }
 }
