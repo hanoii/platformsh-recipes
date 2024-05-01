@@ -202,10 +202,10 @@ platformsh_recipes_cr_deploy_preset_drupal() {
   fi
 
   if [[ $deploy -eq 1 ]]; then
-    echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Clearing caches...\033[0m"
+    echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Running deploy hooks...\033[0m"
     drush -y deploy:hook
-    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Caches cleared!\033[0m"
+    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Deploy hooks run!\033[0m"
   else
-    echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping cache clear, not needed!\033[0m"
+    echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping deploy hooks, not needed!\033[0m"
   fi
 }
