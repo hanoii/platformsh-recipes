@@ -163,25 +163,18 @@ platformsh_recipes_cr_deploy_preset_drupal() {
   local cr=0;
   local cim=0;
   local updb=0
+  local deploy=0;
 
   if platformsh_recipes_cr_deploy_should_run "config"; then
     cim=1
   fi
 
   if platformsh_recipes_cr_deploy_should_run "composer" || platformsh_recipes_cr_deploy_should_run "code"; then
-    updb=1; cr=1
+    updb=1; cr=1; deploy=1;
   fi
 
   if platformsh_recipes_cr_deploy_should_run "theme" || platformsh_recipes_cr_deploy_should_run "settings"; then
     cr=1
-  fi
-
-  if [[ $cr -eq 1 ]]; then
-    echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Clearing caches...\033[0m"
-    drush -y cache-rebuild
-    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Caches cleared!\033[0m"
-  else
-    echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping cache clear, not needed!\033[0m"
   fi
 
   if [[ $updb -eq 1 ]]; then
@@ -198,5 +191,21 @@ platformsh_recipes_cr_deploy_preset_drupal() {
     echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Config imported!\033[0m"
   else
     echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping config import, not needed!\033[0m"
+  fi
+
+  if [[ $cr -eq 1 ]]; then
+    echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Clearing caches...\033[0m"
+    drush -y cache-rebuild
+    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Caches cleared!\033[0m"
+  else
+    echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping cache clear, not needed!\033[0m"
+  fi
+
+  if [[ $deploy -eq 1 ]]; then
+    echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Clearing caches...\033[0m"
+    drush -y deploy:hook
+    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Caches cleared!\033[0m"
+  else
+    echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping cache clear, not needed!\033[0m"
   fi
 }
