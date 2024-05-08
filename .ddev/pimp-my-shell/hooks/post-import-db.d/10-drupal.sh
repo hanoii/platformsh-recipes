@@ -8,9 +8,11 @@ if [[ "$DDEV_PROJECT_TYPE" == *"drupal"* ]]; then
     exit 1
   fi
 
-  drush cr -y
+  # Doing pretty much the same as drush deploy, just being verbose
   drush updb -y
   drush cim -y
+  drush cr -y
+  drush deploy:hook -y
 
   /var/www/html/.ddev/pimp-my-shell/scripts/drush-uli.sh
 else

@@ -3,21 +3,29 @@
 set -e -o pipefail
 
 USAGE=$(cat << EOM
-
 Usage: ${DDEV_PLATFORMSH_LITE_HELP_CMD-$0} [options]
 
   -h                This help text.
   -r                Reset default values as if run for the first time.
+                    Allows to select different defaults.
   -e ENVIRONMENT    Use a different environment to download/import database.
   -n                Do not download, expect the dump to be already downloaded.
   -o                Import only, do not run post-import-db hooks.
 EOM
 )
 
-env_file=/var/www/html/.ddev/platformsh-lite/.env.v2
+function print_help() {
+  gum style --border "rounded" --margin "1 2" --padding "1 2" "$@" "$USAGE"
+}
 
-while getopts ":r" option; do
+env_file=/var/www/html/.ddev/platformsh-lite/.env.v3
+
+while getopts ":rh" option; do
   case ${option} in
+    h)
+      print_help
+      exit 0
+      ;;
     r)
       [[ -f $env_file ]] && rm $env_file
       ;;
@@ -27,6 +35,8 @@ done
 OPTIND=1
 
 if [[ ! -f $env_file ]]; then
+  print_help --foreground 8 --border-foreground 8
+
   gum log --level warn "First time running this command, querying platform for defaults..."
 
   # detect defaults
@@ -71,8 +81,6 @@ post_import=true
 while getopts ":hne:or" option; do
   case ${option} in
     h)
-      echo "$USAGE"
-      exit 0
       ;;
     n)
       download=

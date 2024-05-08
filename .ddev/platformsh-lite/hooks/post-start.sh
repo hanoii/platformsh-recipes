@@ -10,12 +10,16 @@ fi
 
 touch $FILENAME
 
-# Update to the latest version
-platform self:update -qy --no-major || true
+# Update to the latest version, only if using the legacy-cli
+# ddev versions before v1.23.0
+# https://github.com/platformsh/legacy-cli
+if [[ $(platform --version) =~ "Platform.sh CLI 4".* ]]; then
+  platform self:update -qy --no-major || true
 
-# Install shell integration to avoid prompt
-# SHELL=$SHELL because of https://github.com/platformsh/cli/issues/117
-SHELL=$SHELL platform self:install -qy || true
+  # Install shell integration to avoid prompt
+  # SHELL=$SHELL because of https://github.com/platformsh/cli/issues/117
+  SHELL=$SHELL platform self:install -qy || true
+fi
 
 # Cert load
 ([ ! -z "${PLATFORMSH_CLI_TOKEN:-}" ] && platform ssh-cert:load -y) || true
