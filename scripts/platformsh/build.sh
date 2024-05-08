@@ -1,43 +1,49 @@
 #!/bin/bash
 set -e
 
+source /etc/os-release
+
+# Map uname -m output to Debian architecture names
+case $(uname -m) in
+  x86_64)
+    VERSION_ARCH="amd64"
+    ;;
+  *)
+    echo "Unsupported debian architecture: $arch"
+    exit 1
+    ;;
+esac
+
 function install_debian() {
   mkdir -p $PLATFORM_APP_DIR/.global/bin
   mkdir -p $PLATFORM_APP_DIR/.global/lib
   mkdir -p $PLATFORM_APP_DIR/.global/terminfo
-  local pkg=$1
-  echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $pkg packages...\033[0m"
-  local debian_version=
-  read -d . debian_version < /etc/debian_version
-  local pkgs=($(cat $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/debian.json | jq -r ".\"$pkg\" | .\"$debian_version\" | .[]" 2> /dev/null))
+  echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $@ packages...\033[0m"
 
-  if [ -z $pkgs ]; then
-    echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] no known packages to download for $pkg, it wasn't installed.\033[0m"
-    return 0
-  fi
-  for i in "${!pkgs[@]}"; do
-    mkdir -p /tmp/$pkg$i
-    cd /tmp/$pkg$i
-    wget -q "${pkgs[$i]}" -O $pkg$i.deb
-    ar x $pkg$i.deb
+  for i in "$@"; do
+    local pkg_url=$(curl -s https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb')
+    mkdir -p /tmp/$i
+    cd /tmp/$i
+    wget -q "$pkg_url" -O $i.deb
+    ar x $i.deb
     tar -xf data.tar.xz
     [ -d usr/bin ] && cp -R usr/bin/* $PLATFORM_APP_DIR/.global/bin
     [ -d lib ] && cp -R lib/* $PLATFORM_APP_DIR/.global/lib
     [ -d usr/lib ] && cp -R usr/lib/* $PLATFORM_APP_DIR/.global/lib
     [ -d usr/share/terminfo ] && cp -R usr/share/terminfo/* $PLATFORM_APP_DIR/.global/terminfo
     cd
-    rm -fr /tmp/$pkg$i
+    rm -fr /tmp/$i
   done
 }
 
 # Install debian packages manually
-install_debian ansilove
+VERSION_CODENAME_OVERRIDE=${VERSION_CODENAME//buster/bullseye} install_debian ansilove
 install_debian colorized-logs
-install_debian htop
-install_debian kitty-terminfo
+install_debian htop libnl-3-200 libnl-genl-3-200
+VERSION_CODENAME_OVERRIDE=unstable VERSION_ARCH_OVERRIDE=all install_debian kitty-terminfo
 install_debian logrotate
 install_debian pv
-install_debian screen
+install_debian screen libutempter0
 
 # screen tweaks
 echo "defscrollback 1000000" >> ~/.screenrc
