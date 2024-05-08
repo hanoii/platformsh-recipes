@@ -24,5 +24,15 @@ function set_win_title() {
   echo -ne "\033]0;$@$PLATFORMSH_RECIPES_PROJECT_NAME/$PLATFORM_BRANCH: $short_pwd\007"
 }
 PROMPT_COMMAND=set_win_title
-PS1="\[\033[1m\]\$PLATFORMSH_RECIPES_PROJECT_NAME@\$PLATFORM_BRANCH\[\033[0m\]:\[\033[1m\]\w\[\033[0m\]\$ "
+prompt_psh() {
+  if [ "$PLATFORM_ENVIRONMENT_TYPE" == "production" ]; then
+    echo -en "\033[1;33m"
+  fi
+  echo -n "[p.sh/${PLATFORM_ENVIRONMENT_TYPE}]"
+  if [ "$PLATFORM_ENVIRONMENT_TYPE" == "production" ]; then
+    echo -en "\033[0m"
+  fi
+  echo -n " "
+}
+PS1="\[\033[1m\]\`prompt_psh\`\$PLATFORMSH_RECIPES_PROJECT_NAME@\$PLATFORM_BRANCH\[\033[0m\]:\[\033[1m\]\w\[\033[0m\]\$ "
 trap 'cmd="$BASH_COMMAND"; [[ "$cmd" != "$PROMPT_COMMAND" ]] && set_win_title ${BASH_COMMAND} "- "' DEBUG
