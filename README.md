@@ -11,7 +11,7 @@ A collection of scripts, commands, recipes and notes for platform.sh
   * [`.environment`](#environment)
   * [`.bashrc`](#bashrc)
 - [Performance troubleshooting](#performance-troubleshooting)
-  * [ahoy commans](#ahoy-commans)
+  * [ahoy commands](#ahoy-commands)
   * [Time/memory used](#timememory-used)
   * [404s](#404s)
   * [User-Agents](#user-agents)
@@ -113,7 +113,7 @@ to do that you need to make available the following environment variables:
 - `PLATFORM_PROJECT`
 - `PLATFORMSH_RECIPES_MAIN_BRANCH=main` (optional, defaults to `master`)
 
-### ahoy commans
+### ahoy commands
 
 All of the ahoy commands below have the following flags
 
