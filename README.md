@@ -33,7 +33,7 @@ includes more data, to do that add/amend the following on your
 ```yml
 web:
   commands:
-    pre_start: $PLATFORMSH_RECIPES_INSTALLDIR/scripts/platformsh/php-pre-start.sh
+    pre_start: $PLATFORMSH_RECIPES_INSTALLDIR/assets/platformsh/php-pre-start.sh
     start: /usr/bin/start-php-app -y "$PLATFORM_APP_DIR/.deploy/php-fpm.conf"
 ```
 

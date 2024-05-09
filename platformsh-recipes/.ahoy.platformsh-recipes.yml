@@ -9,33 +9,33 @@ commands:
 
   log:php:
     usage: Get lines of /var/log/php.access.log with useful filters
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/php.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/logs/php.sh "$@"
 
   log:php:rpm:
     usage: Get rpm out of /var/log/php.access.log
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/php-rpm.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/logs/php-rpm.sh "$@"
 
   log:php:top:
     usage: Get a sorted list of php pages by time. (--mem to sort by memory usage)
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/php-top.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/logs/php-top.sh "$@"
 
   log:access:
     usage: Get lines of /var/log/access.log with useful filters
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/access.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/logs/access.sh "$@"
 
   log:access:rpm:
     usage: Get rpm out of /var/log/access.log
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/access-rpm.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/logs/access-rpm.sh "$@"
 
   log:ipblock:
     usage: Block BAD IPs
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/logs/ipblock.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/logs/ipblock.sh "$@"
 
 
   ipblock:add:
     usage: Add IP to the block list
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/ipblock-add.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/commands/ipblock-add.sh "$@"
 
   ipblock:rm:
     usage: Remove IP from the block list
-    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/scripts/commands/ipblock-remove.sh "$@"
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/commands/ipblock-remove.sh "$@"
