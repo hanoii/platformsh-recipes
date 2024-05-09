@@ -8,7 +8,7 @@ Usage: ${DDEV_PLATFORMSH_LITE_HELP_CMD-$0} [options]
   -h                This help text.
   -c                Choose from the latest push activities.
   -l                The limit amount for the choose option, it defaults to 10 (platform cli default).
-  -e ENVIRONMENT    Use a different environment to download/import database.
+  -e ENVIRONMENT    Use a different environment to get activity log from.
 EOM
 )
 
@@ -41,7 +41,7 @@ done
 OPTIND=1
 
 if [[ $choose -eq 1 ]]; then
-  IFS=$'\n' ACTIVITY=$(gum filter $(platform activities --type=environment.push --format=tsv --no-header $cmd_limit) | awk '{print $1}')
+  ACTIVITY=$(platform activities $cmd_environment --type=environment.push --format=tsv --no-header $cmd_limit | gum filter | awk '{print $1}')
 else
   PENDING=$({ platform activities $cmd_environment --type environment.push --all --state=pending --format=plain --columns=id --no-header 2> /dev/null || true; } | wc -l)
   state_flag=
