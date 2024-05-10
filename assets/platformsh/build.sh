@@ -1,12 +1,16 @@
 #!/bin/bash
-set -e
+set -e -o pipefail
 
 source /etc/os-release
 
 # Map uname -m output to Debian architecture names
-case $(uname -m) in
+arch=$(uname -m)
+case $arch in
   x86_64)
     VERSION_ARCH="amd64"
+    ;;
+  aarch64)
+    VERSION_ARCH="arm64"
     ;;
   *)
     echo "Unsupported debian architecture: $arch"
@@ -22,6 +26,7 @@ function install_debian() {
 
   for i in "$@"; do
     local pkg_url=$(curl -s https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb')
+    echo "Installing $(basename $pkg_url)..."
     mkdir -p /tmp/$i
     cd /tmp/$i
     wget -q "$pkg_url" -O $i.deb
@@ -51,13 +56,15 @@ echo 'shell -$SHELL' >> ~/.screenrc
 
 # Install fzf
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing fzf...\033[0m"
-wget -q https://github.com/junegunn/fzf/releases/download/0.48.1/fzf-0.48.1-linux_amd64.tar.gz -O - | tar -zx -C .global/bin
+wget -q https://github.com/junegunn/fzf/releases/download/0.52.0/fzf-0.52.0-linux_amd64.tar.gz -O - | tar -zx -C $PLATFORM_APP_DIR/.global/bin
 
 # Install platform cli
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing platform cli...\033[0m"
 echo "Installing Platform.sh CLI"
-curl -fsSL https://raw.githubusercontent.com/platformsh/cli/main/installer.sh | bash > /dev/null
+if [ -z "$IS_DDEV_PROJECT" ]; then
+  curl -fsSL https://raw.githubusercontent.com/platformsh/cli/main/installer.sh | bash > /dev/null
+fi
 
 # Install ahoy
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing ahoy...\033[0m"
-wget -q https://github.com/ahoy-cli/ahoy/releases/download/v2.1.1/ahoy-bin-linux-amd64 -O .global/bin/ahoy && chmod +x .global/bin/ahoy
+wget -q https://github.com/ahoy-cli/ahoy/releases/download/v2.1.1/ahoy-bin-linux-amd64 -O $PLATFORM_APP_DIR/.global/bin/ahoy && chmod +x $PLATFORM_APP_DIR/.global/bin/ahoy
