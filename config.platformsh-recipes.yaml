@@ -1,0 +1,4 @@
+#ddev-generated
+web_environment:
+  # Avoid checking for updates, as it will be updated on start.
+  - PLATFORMSH_RECIPES_INSTALLDIR=./.ddev

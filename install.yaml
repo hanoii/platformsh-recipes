@@ -1,0 +1,8 @@
+name: platformsh-recipes
+project_files:
+  - platformsh-recipes/assets/drupal
+  - platformsh-recipes/scripts
+  - platformsh-recipes/.ahoy.platformsh-recipes.yml
+  - config.platformsh-recipes.yaml
+dependencies:
+  - pimp-my-shell

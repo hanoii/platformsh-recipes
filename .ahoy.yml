@@ -1,17 +1,13 @@
 ahoyapi: v2
 commands:
   readme:
-    usage: 'Tidy up README.md'
-    cmd: |
-      prettier README.md --write
-      markdown-toc -i README.md
-
-  readme:watch:
-    usage: 'Watch README.md for changes'
-    cmd: |
-      node .ddev/watch.js
+    usage: readme commands
+    imports:
+      - ./.ddev/platformsh-lite/.ahoy.platformsh-lite.yml
+      - ./.ddev/platformsh-recipes/.ahoy.platformsh-recipes.yml
 
   platform:
-    usage: List the common platform commands
+    usage: platform commands
     imports:
-      - ./.ahoy.platformsh-recipes.yml
+      - ./.ddev/platformsh-lite/.ahoy.platformsh-lite.yml
+      - ./.ddev/platformsh-recipes/.ahoy.platformsh-recipes.yml
