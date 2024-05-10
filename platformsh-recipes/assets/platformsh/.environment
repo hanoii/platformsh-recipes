@@ -6,5 +6,5 @@ export TERMINFO_DIRS="${PLATFORM_APP_DIR}/.global/terminfo:"
 # dash does not support every bashism and this file is also sourced by dash
 # and dash is used in many places on platform.
 if [ -n "$PLATFORM_APP_DIR" -a -n "$BASH" ]; then
-  [ -f $PLATFORMSH_RECIPES_INSTALLDIR/assets/platformsh/.bashrc ] && source $PLATFORMSH_RECIPES_INSTALLDIR/assets/platformsh/.bashrc
+  [ -f $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.bashrc ] && source $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.bashrc
 fi
