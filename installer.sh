@@ -43,10 +43,10 @@ fi
 echo "${PLATFORMSH_RECIPES_VERSION}" > $PLATFORMSH_RECIPES_INSTALLDIR/version
 if [[ -n "$full" ]]; then
   # Install tools
-  $PLATFORMSH_RECIPES_INSTALLDIR/assets/platformsh/build.sh
+  $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/build.sh
   echo "export PLATFORMSH_RECIPES_INSTALLDIR=$PLATFORMSH_RECIPES_INSTALLDIR" >> $PLATFORM_APP_DIR/.environment
   # Using . instead of source so it's dash-compatible.
-  echo ". $PLATFORMSH_RECIPES_INSTALLDIR/assets/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
+  echo ". $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.environment" >> $PLATFORM_APP_DIR/.environment
 fi
 echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platformsh-recipes!\n\033[0m"
 
@@ -55,4 +55,4 @@ if [[ "$PLATFORMSH_RECIPES_VERSION" != "$_latest" ]]; then
   >&2 echo -e "\033[0;33m[warning] You are not using the latest version: '${_latest}'.\033[0m"
 fi
 
-source $PLATFORMSH_RECIPES_INSTALLDIR/assets/platformsh/functions.sh
+source $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/functions.sh
