@@ -19,7 +19,7 @@
 // but allow drush to still work. This is for heavy maintenance like a db
 // migration or something like that.
 // @TODO: Accompanyinig helper ahoy commands
-if (PHP_SAPI !== 'cli' && !empty($_ENV['o'])) {
+if (PHP_SAPI !== 'cli' && !empty($_ENV['PLATFORMSH_RECIPES_MAINTENANCE_503'])) {
   header('HTTP/1.1 503 Service Unavailable');
   header('Retry-After: 300');
   header('Content-Type: text/html');
