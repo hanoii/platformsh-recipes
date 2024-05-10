@@ -40,7 +40,6 @@ if [ -n "$IS_DDEV_PROJECT" ]; then
   ln -fs ../ $PLATFORMSH_RECIPES_INSTALLDIR
 fi
 
-echo "${PLATFORMSH_RECIPES_VERSION}" > $PLATFORMSH_RECIPES_INSTALLDIR/version
 if [[ -n "$full" ]]; then
   # Install tools
   $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/build.sh
