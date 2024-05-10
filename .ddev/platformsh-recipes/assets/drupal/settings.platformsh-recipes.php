@@ -6,7 +6,7 @@
  * project, following you added this project to your platform build
  * as per the main README.md.
  *
- * if (empty($_ENV['PLATFORMSH_RECIPES_INSTALLDIR'])) {
+ * if (!empty($_ENV['PLATFORMSH_RECIPES_INSTALLDIR'])) {
  *   $platformsh_recipes_settings = $_ENV['PLATFORMSH_RECIPES_INSTALLDIR'] . '/platformsh-recipes/assets/drupal/settings.platformsh-recipes.php';
  *   if (file_exists($platformsh_recipes_settings)) {
  *     include $platformsh_recipes_settings;
