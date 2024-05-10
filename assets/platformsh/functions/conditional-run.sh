@@ -1,5 +1,3 @@
-#!/bin/bash
-
 platformsh_recipes_cr_get_cache_dir() {
   if [ "$#" -lt 1 ]; then
     >&2 echo -e "\033[0;31m[error/${FUNCNAME[0]}] You need to pass an ID.\033[0m"
