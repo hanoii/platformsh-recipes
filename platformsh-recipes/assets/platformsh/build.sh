@@ -51,8 +51,7 @@ install_debian pv
 install_debian screen libutempter0
 
 # screen tweaks
-echo "defscrollback 1000000" >> ~/.screenrc
-echo 'shell -$SHELL' >> ~/.screenrc
+cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc ~/.screenrc
 
 # Install fzf
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing fzf...\033[0m"
