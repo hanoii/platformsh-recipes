@@ -25,7 +25,7 @@ done
 ##
 # Get the content of https://github.com/hanoii/platformsh-recipes.
 ###
-PLATFORMSH_RECIPES_INSTALLDIR=${PLATFORMSH_RECIPES_INSTALLDIR-$PLATFORM_APP_DIR/.platformsh-recipes}
+export PLATFORMSH_RECIPES_INSTALLDIR=${PLATFORMSH_RECIPES_INSTALLDIR-$PLATFORM_APP_DIR/.platformsh-recipes}
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing hanoii/platformsh-recipes...\033[0m"
 
 if [ -n "$IS_DDEV_PROJECT" ] && [ -L $PLATFORMSH_RECIPES_INSTALLDIR ]; then
