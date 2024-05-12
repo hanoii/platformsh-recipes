@@ -23,7 +23,7 @@ commands:
   maintenance503:clear:
     usage: Remove the needed environment variable and dump
     cmd: |
-      gum spin --title="Removing dump.sql on platform..." -- platform ssh "rm -f \$PLATFORM_APP_DIR/.deploy/dump.sql"
+      gum spin --title="Removing dump.sql on platform..." -- platform ssh "rm -f \$PLATFORM_APP_DIR/.deploy/dump-*.sql"
       platform variable:delete --yes env:PLATFORMSH_RECIPES_MAINTENANCE_503
 
   log:php:
