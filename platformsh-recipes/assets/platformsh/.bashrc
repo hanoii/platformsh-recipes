@@ -1,3 +1,9 @@
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
 eval "$(fzf --bash)"
 
 # Allow colon(:) in autocomplete, mostly for the ahoy below
