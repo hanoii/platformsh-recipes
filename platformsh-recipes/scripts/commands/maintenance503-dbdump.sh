@@ -13,4 +13,5 @@ platform ssh "\
   mysqldump \
     -u \$(echo \$PLATFORM_RELATIONSHIPS | base64 -d | jq -r \".${relationship_name}[0].username\") \
     -h \$(echo \$PLATFORM_RELATIONSHIPS | base64 -d | jq -r \".${relationship_name}[0].host\") \
-    --protocol=tcp --all-databases --verbose > \$PLATFORM_APP_DIR/.deploy/dump.sql"
+    --protocol=tcp --all-databases --verbose > \$PLATFORM_APP_DIR/.deploy/dump-${relationship_name}.sql"
+gum log --level warn "Remember to run 'platform backup -y'!"
