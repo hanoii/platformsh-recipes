@@ -1,15 +1,22 @@
 # Allow for a debug override
-if [ ! -f /tmp/.environment.platformsh-recipes ]; then
-  # For libraries installed on build hook for some of the apps
-  export LD_LIBRARY_PATH="${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
-  export TERMINFO_DIRS="${PLATFORM_APP_DIR}/.global/terminfo:"
-
-  # Only run the below code for bash, bear in mind that
-  # dash does not support every bashism and this file is also sourced by dash
-  # and dash is used in many places on platform.
-  if [ -n "$PLATFORM_APP_DIR" -a -n "$BASH" ]; then
-    [ -f $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.bashrc ] && source $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.bashrc
+if [ -n "$PLATFORMSH_RECIPES_DEBUG" ] && [ -f /tmp/.environment.platformsh-recipes ]; then
+  # Prevent recursiveness if this file is included as is after copying
+  if [ -n "$PLATFORMSH_RECIPES_DEBUG_PREVENT_RECURSIVE" ]; then
+    echo -e "\033[0;31m[error] /tmp/.environment.platformsh-recipes is called recursively, please review.\033[0m"
+    return
   fi
-else
+  PLATFORMSH_RECIPES_DEBUG_PREVENT_RECURSIVE=true
   . /tmp/.environment.platformsh-recipes
+  return
+fi
+
+# For libraries installed on build hook for some of the apps
+export LD_LIBRARY_PATH="${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
+export TERMINFO_DIRS="${PLATFORM_APP_DIR}/.global/terminfo:"
+
+# Only run the below code for bash, bear in mind that
+# dash does not support every bashism and this file is also sourced by dash
+# and dash is used in many places on platform.
+if [ -n "$PLATFORM_APP_DIR" -a -n "$BASH" ]; then
+  [ -f $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.bashrc ] && source $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.bashrc
 fi
