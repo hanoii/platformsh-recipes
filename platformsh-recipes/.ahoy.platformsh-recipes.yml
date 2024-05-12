@@ -16,6 +16,11 @@ commands:
     usage: Dump the whole database
     cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/commands/maintenance503-dbdump.sh "$@"
 
+  maintenance503:dbdump:clear:
+    usage: Remove all dumps created by this feature.
+    cmd: |
+      gum spin --title="Removing dump.sql on platform..." -- platform ssh "rm -f \$PLATFORM_APP_DIR/.deploy/dump-*.sql"
+
   maintenance503:dbrestore:
     usage: Restore the whole database
     cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/commands/maintenance503-dbrestore.sh "$@"
@@ -23,8 +28,9 @@ commands:
   maintenance503:clear:
     usage: Remove the needed environment variable and dump
     cmd: |
-      gum spin --title="Removing dump.sql on platform..." -- platform ssh "rm -f \$PLATFORM_APP_DIR/.deploy/dump-*.sql"
       platform variable:delete --yes env:PLATFORMSH_RECIPES_MAINTENANCE_503
+      gum log --level warn "Remember to clear dumps after checking all is ok."
+      gum log --level warn "You can use the 'ahoy platform maintenance503:dbdump:clear'"
 
   log:php:
     usage: Get lines of /var/log/php.access.log with useful filters
