@@ -1,3 +1,9 @@
+# Allow for a debug override
+if [ -f /tmp/.environment.platformsh-recipes ]; then
+  . /tmp/.environment.platformsh-recipes
+  exit
+fi
+
 # For libraries installed on build hook for some of the apps
 export LD_LIBRARY_PATH="${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
 export TERMINFO_DIRS="${PLATFORM_APP_DIR}/.global/terminfo:"
