@@ -55,7 +55,7 @@ cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc
 
 # Install fzf
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing fzf...\033[0m"
-wget -q https://github.com/junegunn/fzf/releases/download/0.52.0/fzf-0.52.0-linux_amd64.tar.gz -O - | tar -zx -C $PLATFORM_APP_DIR/.global/bin
+wget -q https://github.com/junegunn/fzf/releases/download/0.52.1/fzf-0.52.1-linux_amd64.tar.gz -O - | tar -zx -C $PLATFORM_APP_DIR/.global/bin
 
 # Install platform cli
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing platform cli...\033[0m"
