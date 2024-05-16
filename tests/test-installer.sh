@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PLATFORMSH_RECIPES_VERSION=808de168ca52fe727106af30f67e3699fae8f2b9
+export PLATFORMSH_RECIPES_VERSION=6be82fe
 export PLATFORM_APP_DIR=/var/www/html/tmp
 export PLATFORMSH_RECIPES_INSTALLDIR=/var/www/html/tmp/.platformsh-recipes
 source /dev/stdin  <<< "$(cat installer.sh)" -f
