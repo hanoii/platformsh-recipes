@@ -49,6 +49,7 @@ VERSION_CODENAME_OVERRIDE=unstable VERSION_ARCH_OVERRIDE=all install_debian kitt
 install_debian logrotate
 install_debian pv
 install_debian screen libutempter0
+install_debian telnet
 
 # screen tweaks
 cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc ~/.screenrc
