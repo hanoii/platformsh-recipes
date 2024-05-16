@@ -50,6 +50,9 @@ install_debian logrotate
 install_debian pv
 install_debian screen libutempter0
 install_debian telnet
+if [ -f $PLATFORM_APP_DIR/.global/bin/telnet.netkit ]; then
+  mv $PLATFORM_APP_DIR/.global/bin/telnet.netkit $PLATFORM_APP_DIR/.global/bin/telnet
+fi
 
 # screen tweaks
 cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc ~/.screenrc
