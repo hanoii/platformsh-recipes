@@ -4,6 +4,7 @@ A collection of scripts, commands, recipes and notes for platform.sh
 
 <!-- toc -->
 
+- [ddev](#ddev)
 - [Platform.sh setup](#platformsh-setup)
   * [`.platform.app.yaml` tweaks](#platformappyaml-tweaks)
   * [Build](#build)
@@ -21,6 +22,16 @@ A collection of scripts, commands, recipes and notes for platform.sh
     + [access.log](#accesslog)
 
 <!-- tocstop -->
+
+## ddev
+
+This is also a ddev add-on that you can install with:
+
+```sh
+ddev get https://github.com/hanoii/platformsh-recipes/tarball/main
+```
+
+It installs most of the locally necesary scripts to run against platform.
 
 ## Platform.sh setup
 
@@ -46,14 +57,18 @@ mounts:
     source_path: "deploy"
 ```
 
-And if your production environment is other than master, some scripts reference
-the main environment through `PLATFORMSH_RECIPES_MAIN_BRANCH` environment
-variable:
+You also need to configure the `PLATFORMSH_RECIPES_VERSION` on the variables
+section:
 
 ```yml
 variables:
-  PLATFORMSH_RECIPES_MAIN_BRANCH: main
+  ...
+  PLATFORMSH_RECIPES_VERSION: 6be82fe
+
 ```
+
+The version is the SHA1 commit hash you wish to install. It can be of any
+length.
 
 ### Build
 
@@ -66,8 +81,7 @@ commit sha of the repo for `PLATFORMSH_RECIPES_VERSION`**) :
 ```yml
 hooks:
   build: |
-    export PLATFORMSH_RECIPES_VERSION=
-    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/installer.sh" | bash -s
+    source /dev/stdin  <<< "$(curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/installer.sh")"
 ```
 
 If you wish to automatically install and setup most of what this repo provides,
@@ -76,8 +90,7 @@ you can append `-f` to the `installer.sh` script above:
 ```yml
 hooks:
   build: |
-    export PLATFORMSH_RECIPES_VERSION=
-    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/installer.sh" | bash -s -- -f
+    source /dev/stdin  <<< "$(curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/installer.sh")" -f
 ```
 
 ### Tools
