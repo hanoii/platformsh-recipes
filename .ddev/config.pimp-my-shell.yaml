@@ -13,12 +13,13 @@ webimage_extra_packages:
   - dialog
   - figlet
   - htop
-  - kitty-terminfo
   - libarchive-tools
   - lolcat
   - lua5.4
   - net-tools
   - pv
+  - screen
   - vim-nox
 web_environment:
   - COLORTERM=${COLORTERM}
+  - TERM=${TERM}
