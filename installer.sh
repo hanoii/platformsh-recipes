@@ -51,7 +51,7 @@ echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] Done installing hanoii/platfo
 
 _latest=$(curl -s "https://api.github.com/repos/hanoii/platformsh-recipes/commits/main" | jq -r '.sha')
 if [[ "$PLATFORMSH_RECIPES_VERSION" != "${_latest:0:${#PLATFORMSH_RECIPES_VERSION}}" ]]; then
-  >&2 echo -e "\033[0;33m[warning] You are not using the latest version: '${_latest}'.\033[0m"
+  >&2 echo -e "\033[0;33m[warning] You are not using the latest platformsh-recipes version: '${_latest}'.\033[0m"
 fi
 
 source $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/functions.sh
