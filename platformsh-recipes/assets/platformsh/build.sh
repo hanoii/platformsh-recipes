@@ -50,8 +50,12 @@ install_debian logrotate
 install_debian pv
 install_debian screen libutempter0
 install_debian telnet
+install_debian vim-nox libgpm2 liblua5.2-0
 if [ -f $PLATFORM_APP_DIR/.global/bin/telnet.netkit ]; then
   mv $PLATFORM_APP_DIR/.global/bin/telnet.netkit $PLATFORM_APP_DIR/.global/bin/telnet
+fi
+if [ -f $PLATFORM_APP_DIR/.global/bin/vim.nox ]; then
+  mv $PLATFORM_APP_DIR/.global/bin/vim.nox $PLATFORM_APP_DIR/.global/bin/vi
 fi
 
 # screen tweaks
