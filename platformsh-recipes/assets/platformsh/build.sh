@@ -51,25 +51,29 @@ function install_debian() {
   done
 }
 
-# Install debian packages manually
-VERSION_CODENAME_OVERRIDE=${VERSION_CODENAME//buster/bullseye} install_debian ansilove
-install_debian colorized-logs
-install_debian htop libnl-3-200 libnl-genl-3-200
-VERSION_CODENAME_OVERRIDE=unstable VERSION_ARCH_OVERRIDE=all install_debian kitty-terminfo
-install_debian logrotate
-install_debian pv
-install_debian screen libutempter0
-install_debian telnet
-install_debian vim-nox vim-runtime libgpm2 liblua5.2-0
-if [ -f $PLATFORM_APP_DIR/.global/bin/telnet.netkit ]; then
-  mv $PLATFORM_APP_DIR/.global/bin/telnet.netkit $PLATFORM_APP_DIR/.global/bin/telnet
-fi
-if [ -f $PLATFORM_APP_DIR/.global/bin/vim.nox ]; then
-  mv $PLATFORM_APP_DIR/.global/bin/vim.nox $PLATFORM_APP_DIR/.global/bin/vi
-fi
+if [ "$VERSION_CODENAME" != "stretch" ]; then
+  # Install debian packages manually
+  VERSION_CODENAME_OVERRIDE=${VERSION_CODENAME//buster/bullseye} install_debian ansilove
+  install_debian colorized-logs
+  install_debian htop libnl-3-200 libnl-genl-3-200
+  VERSION_CODENAME_OVERRIDE=unstable VERSION_ARCH_OVERRIDE=all install_debian kitty-terminfo
+  install_debian logrotate
+  install_debian pv
+  install_debian screen libutempter0
+  install_debian telnet
+  install_debian vim-nox vim-runtime libgpm2 liblua5.2-0
+  if [ -f $PLATFORM_APP_DIR/.global/bin/telnet.netkit ]; then
+    mv $PLATFORM_APP_DIR/.global/bin/telnet.netkit $PLATFORM_APP_DIR/.global/bin/telnet
+  fi
+  if [ -f $PLATFORM_APP_DIR/.global/bin/vim.nox ]; then
+    mv $PLATFORM_APP_DIR/.global/bin/vim.nox $PLATFORM_APP_DIR/.global/bin/vi
+  fi
 
-# screen tweaks
-cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc ~/.screenrc
+  # screen tweaks
+  cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc ~/.screenrc
+else
+  >&2 echo -e "\033[0;33m[warning] installing debian packages for $VERSION_CODENAME is no longer supported.'.\033[0m"
+fi
 
 # Install fzf
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing fzf...\033[0m"
