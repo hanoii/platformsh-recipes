@@ -21,7 +21,7 @@ esac
 function install_debian() {
   mkdir -p $PLATFORM_APP_DIR/.global/bin
   mkdir -p $PLATFORM_APP_DIR/.global/lib
-  mkdir -p $PLATFORM_APP_DIR/.global/terminfo
+  mkdir -p $PLATFORM_APP_DIR/.global/share
   echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $@ packages...\033[0m"
 
   for i in "$@"; do
@@ -35,9 +35,9 @@ function install_debian() {
     [ -d usr/bin ] && cp -R usr/bin/* $PLATFORM_APP_DIR/.global/bin
     [ -d lib ] && cp -R lib/* $PLATFORM_APP_DIR/.global/lib
     [ -d usr/lib ] && cp -R usr/lib/* $PLATFORM_APP_DIR/.global/lib
-    [ -d usr/share/terminfo ] && cp -R usr/share/terminfo/* $PLATFORM_APP_DIR/.global/terminfo
+    [ -d usr/share ] && cp -R usr/share/* $PLATFORM_APP_DIR/.global/share
     cd
-    rm -fr /tmp/$i
+    # rm -fr /tmp/$i
   done
 }
 
@@ -50,7 +50,7 @@ install_debian logrotate
 install_debian pv
 install_debian screen libutempter0
 install_debian telnet
-install_debian vim-nox libgpm2 liblua5.2-0
+install_debian vim-nox vim-runtime libgpm2 liblua5.2-0
 if [ -f $PLATFORM_APP_DIR/.global/bin/telnet.netkit ]; then
   mv $PLATFORM_APP_DIR/.global/bin/telnet.netkit $PLATFORM_APP_DIR/.global/bin/telnet
 fi
