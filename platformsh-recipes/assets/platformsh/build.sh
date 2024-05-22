@@ -31,10 +31,11 @@ function install_debian() {
   echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $@ packages...\033[0m"
 
   for i in "$@"; do
+    local curl_cmd="curl --max-time 5 --retry 5 --retry-delay 0 -s https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download"
     if [ -n "$PLATFORMSH_RECIPES_DEBUG" ]; then
-      echo -e "\033[0;36m[debug] curl -s https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download\033[0m"
+      echo -e "\033[0;36m[debug] $curl_cmd\033[0m"
     fi
-    local pkg_url=$(curl -s https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb')
+    local pkg_url=$($curl_cmd | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb')
     echo "Installing $(basename $pkg_url)..."
     mkdir -p /tmp/$i
     cd /tmp/$i
