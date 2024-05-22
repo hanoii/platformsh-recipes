@@ -31,7 +31,7 @@ function install_debian() {
   echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $@ packages...\033[0m"
 
   for i in "$@"; do
-    local curl_cmd="curl --max-time 5 --retry 5 --retry-delay 0 -s https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download"
+    local curl_cmd="curl --connect-timeout 5 --retry 10 --retry-delay 1 -sS https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download"
     if [ -n "$PLATFORMSH_RECIPES_DEBUG" ]; then
       echo -e "\033[0;36m[debug] $curl_cmd\033[0m"
     fi
