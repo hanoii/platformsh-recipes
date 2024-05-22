@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e -o pipefail
 
+# To run it on a platform ssh console,
+# export PLATFORM_APP_DIR=/tmp/tmpapp
+# rm -fr /tmp/tmpapp ; mkdir -p /tmp/tmpapp
+# Then copy from the next line to the whole install_debin() function and paste
+# it on a terminal
+
 source /etc/os-release
 
 # Map uname -m output to Debian architecture names
@@ -25,6 +31,9 @@ function install_debian() {
   echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $@ packages...\033[0m"
 
   for i in "$@"; do
+    if [ -n "$PLATFORMSH_RECIPES_DEBUG" ]; then
+      echo -e "\033[0;36m[debug] curl -s https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download\033[0m"
+    fi
     local pkg_url=$(curl -s https://packages.debian.org/${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}/${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}/$i/download | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb')
     echo "Installing $(basename $pkg_url)..."
     mkdir -p /tmp/$i
@@ -37,7 +46,7 @@ function install_debian() {
     [ -d usr/lib ] && cp -R usr/lib/* $PLATFORM_APP_DIR/.global/lib
     [ -d usr/share ] && cp -R usr/share/* $PLATFORM_APP_DIR/.global/share
     cd
-    # rm -fr /tmp/$i
+    rm -fr /tmp/$i
   done
 }
 
