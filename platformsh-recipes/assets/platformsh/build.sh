@@ -63,8 +63,26 @@ function install_debian() {
       pkg_url=$($curl_cmd | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb')
     fi
 
-    if [ "$codename" = "stretch" ] && [ "$i" = "screen" ]; then
-      pkg_url="https://snapshot.debian.org/archive/debian-archive/20240331T102506Z/debian-security/pool/updates/main/s/screen/screen_4.5.0-6%2Bdeb9u1_$arch.deb"
+    if [ "$codename" = "stretch" ]; then
+      case $i in
+        screen)
+          pkg_url="https://snapshot.debian.org/archive/debian-archive/20240331T102506Z/debian-security/pool/updates/main/s/screen/screen_4.5.0-6%2Bdeb9u1_$arch.deb"
+          ;;
+        vim-nox)
+          pkg_url="https://snapshot.debian.org/archive/debian/20170722T170615Z/pool/main/v/vim/vim-nox_8.0.0197-5%2Bb1_$arch.deb"
+          ;;
+        vim-runtime)
+          pkg_url="https://snapshot.debian.org/archive/debian/20170712T154237Z/pool/main/v/vim/vim-runtime_8.0.0197-5_all.deb"
+          ;;
+        libgpm2)
+          pkg_url="https://snapshot.debian.org/archive/debian-archive/20240331T102506Z/debian/pool/main/g/gpm/libgpm2_1.20.4-6.2%2Bb1_$arch.deb"
+          ;;
+        liblua5.2-0)
+          pkg_url="https://snapshot.debian.org/archive/debian/20190715T042853Z/pool/main/l/lua5.2/liblua5.2-0_5.2.4-1.1%2Bb3_$arch.deb"
+          ;;
+        libperl5.26)
+          pkg_url="https://snapshot.debian.org/archive/debian/20181010T154208Z/pool/main/p/perl/libperl5.26_5.26.2-7%2Bb1_$arch.deb"
+      esac
     fi
 
     if [ -z "$pkg_url" ]; then
@@ -84,7 +102,10 @@ install_debian logrotate
 install_debian pv
 install_debian screen libutempter0
 install_debian telnet
-install_debian vim-nox vim-runtime libgpm2 liblua5.2-0
+if [ $VERSION_CODENAME = "stretch" ]; then
+  vim_stretch="libperl5.26"
+fi
+install_debian vim-nox vim-runtime libgpm2 liblua5.2-0 $vim_stretch
 if [ -f $PLATFORM_APP_DIR/.global/bin/telnet.netkit ]; then
   mv $PLATFORM_APP_DIR/.global/bin/telnet.netkit $PLATFORM_APP_DIR/.global/bin/telnet
 fi
