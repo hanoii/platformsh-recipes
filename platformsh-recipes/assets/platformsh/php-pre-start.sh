@@ -11,7 +11,7 @@
 #
 # web:
 #     commands:
-#         pre_start: $PLATFORM_APP_DIR/scripts/platformsh-recipes/pre-start.sh
+#         pre_start: $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/pre-start.sh
 #         start: /usr/bin/start-php-app -y "$PLATFORM_APP_DIR/.deploy/php-fpm.conf"
 #
 #
