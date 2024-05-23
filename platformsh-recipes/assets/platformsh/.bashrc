@@ -31,14 +31,16 @@ function set_win_title() {
 }
 PROMPT_COMMAND=set_win_title
 prompt_psh() {
+  # @see https://mywiki.wooledge.org/BashFAQ/053
+  local yellow=$(tput setaf 3)
+  local reset=$(tput sgr0)
+  local prompt="[p.sh/${PLATFORM_ENVIRONMENT_TYPE}]"
+
   if [ "$PLATFORM_ENVIRONMENT_TYPE" == "production" ]; then
-    echo -en "\033[1;33m"
+    printf '\001%s\002%s\001%s\002 ' "$yellow" "$prompt" "$reset"
+  else
+    printf '%s ' "$prompt"
   fi
-  echo -n "[p.sh/${PLATFORM_ENVIRONMENT_TYPE}]"
-  if [ "$PLATFORM_ENVIRONMENT_TYPE" == "production" ]; then
-    echo -en "\033[0m"
-  fi
-  echo -n " "
 }
 PS1="\[\033[1m\]\`prompt_psh\`\$PLATFORMSH_RECIPES_PROJECT_NAME@\$PLATFORM_BRANCH\[\033[0m\]:\[\033[1m\]\w\[\033[0m\]\$ "
 trap 'cmd="$BASH_COMMAND"; [[ "$cmd" != "$PROMPT_COMMAND" ]] && set_win_title ${BASH_COMMAND} "- "' DEBUG
