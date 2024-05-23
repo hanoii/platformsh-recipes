@@ -4,6 +4,7 @@ set -e -o pipefail
 # To run it on a platform ssh console,
 # export PLATFORM_APP_DIR=/tmp/tmpapp
 # rm -fr /tmp/tmpapp ; mkdir -p /tmp/tmpapp
+# export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
 # Then copy from the next line to the whole install_debin() function and paste
 # it on a terminal
 
@@ -67,7 +68,7 @@ function install_debian() {
     fi
 
     if [ -z "$pkg_url" ]; then
-      >&2 echo -e "\033[0;33m[warning] installing debian package $i for $codename is currently not supported.\033[0m"
+      echo -e "\033[0;33m[warning] installing debian package $i for $codename is currently not supported.\033[0m"
     else
       install_debian_url $pkg_url
     fi
