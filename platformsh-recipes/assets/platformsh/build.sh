@@ -60,7 +60,11 @@ function install_debian() {
       if [ -n "$PLATFORMSH_RECIPES_DEBUG" ]; then
         echo -e "\033[0;36m[debug] $curl_cmd\033[0m"
       fi
-      pkg_url=$($curl_cmd | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb')
+      if ! pkg_url=$($curl_cmd | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb'); then
+        if ! pkg_url=$($curl_cmd | grep -oP 'http://security.debian.org/debian-security/pool/updates/main/.*?\.deb'); then
+          :
+        fi
+      fi
     fi
 
     if [ "$codename" = "stretch" ]; then
