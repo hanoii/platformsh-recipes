@@ -129,7 +129,9 @@ platformsh_recipes_cr_deploy_success() {
   local id=$1
   local hash_filename=".platformsh-recipes.hash.$id"
   local deploy_dir=$PLATFORM_APP_DIR/.deploy
-  cp /tmp/${hash_filename}.extra ${deploy_dir}/.platformsh-recipes/${hash_filename}.extra
+  if [ -f /tmp/${hash_filename}.extra ]; then
+    cp /tmp/${hash_filename}.extra ${deploy_dir}/.platformsh-recipes/${hash_filename}.extra
+  fi
 }
 
 platformsh_recipes_cr_deploy_store() {
