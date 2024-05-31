@@ -98,9 +98,38 @@ platformsh_recipes_cr_deploy_should_run() {
     return 10
   fi
   local id=$1
+  local extra=$2
   local hash_filename=".platformsh-recipes.hash.$id"
   local deploy_dir=$PLATFORM_APP_DIR/.deploy
-  [[ ! -f ${deploy_dir}/.platformsh-recipes/${hash_filename} ]] || ! cmp -s "${deploy_dir}/.platformsh-recipes/${hash_filename}" $hash_filename
+  if [[ -f ${deploy_dir}/.platformsh-recipes/${hash_filename} ]] && cmp -s "${deploy_dir}/.platformsh-recipes/${hash_filename}" $hash_filename; then
+    if [[ -n "$extra" ]]; then
+      echo "$extra" > /tmp/${hash_filename}.extra
+      if [[ -f ${deploy_dir}/.platformsh-recipes/${hash_filename}.extra ]] && [[ "$extra" == $(cat ${deploy_dir}/.platformsh-recipes/${hash_filename}.extra) ]]; then
+        # should not run
+        return 1
+      else
+        # should run
+        return 0
+      fi
+    else
+      # should not run
+      return 1
+    fi
+  else
+    # should run
+    return 0
+  fi
+}
+
+platformsh_recipes_cr_deploy_success() {
+  if [ "$#" -lt 1 ]; then
+    >&2 echo -e "\033[0;31m[error/${FUNCNAME[0]}] You need to pass an ID.\033[0m"
+    return 10
+  fi
+  local id=$1
+  local hash_filename=".platformsh-recipes.hash.$id"
+  local deploy_dir=$PLATFORM_APP_DIR/.deploy
+  cp /tmp/${hash_filename}.extra ${deploy_dir}/.platformsh-recipes/${hash_filename}.extra
 }
 
 platformsh_recipes_cr_deploy_store() {
