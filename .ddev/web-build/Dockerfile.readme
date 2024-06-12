@@ -1,2 +1,9 @@
 #ddev-generated
-RUN npm install -g markdown-toc prettier
+RUN \
+  version=$(node -v | awk -F'[v.]' '{print $2}'); \
+  if [ $version -lt 18 ]; then \
+    n install 20 -d; \
+    n exec lts npm install -g markdown-toc prettier; \
+  else \
+    npm install -g markdown-toc prettier; \
+  fi
