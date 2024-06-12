@@ -49,9 +49,9 @@ function install_debian_url() {
 }
 
 function install_debian() {
-  echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $@ packages...\033[0m"
   local codename=${VERSION_CODENAME_OVERRIDE-$VERSION_CODENAME}
   local arch=${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}
+  echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $@ packages from ${codename}/${arch}...\033[0m"
 
   for i in "$@"; do
     local pkg_url=
