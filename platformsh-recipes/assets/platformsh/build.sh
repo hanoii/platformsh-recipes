@@ -3,8 +3,9 @@ set -e -o pipefail
 
 # To run it on a platform ssh console,
 # export PLATFORM_APP_DIR=/tmp/tmpapp
-# rm -fr /tmp/tmpapp ; mkdir -p /tmp/tmpapp
+# rm -fr /tmp/tmpapp ; mkdir -p /tmp/tmpapp/cache
 # export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
+# PLATFORM_CACHE_DIR=/tmp/tmpapp/cache
 # Then copy from the next line to the whole install_debin() function and paste
 # it on a terminal
 
@@ -53,16 +54,36 @@ function install_debian() {
   local arch=${VERSION_ARCH_OVERRIDE-$VERSION_ARCH}
   echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing debian $@ packages from ${codename}/${arch}...\033[0m"
 
+  mkdir -p ${PLATFORM_CACHE_DIR}/platformsh-recipes/build
+
   for i in "$@"; do
     local pkg_url=
     if [ "$codename" != "stretch" ]; then
-      local curl_cmd="curl --connect-timeout 5 --retry 10 --retry-delay 1 -sS https://packages.debian.org/$codename/$arch/$i/download"
+      local cache=${PLATFORM_CACHE_DIR}/platformsh-recipes/build/${i}.${codename}.${arch}
+      local timeout=5
+      local retry=10
+      if [ -f $cache ]; then
+        timeout=2
+        retry=0
+      fi
+      local curl_cmd="curl --max-time ${timeout} --retry $retry --retry-delay 1 -sS https://packages.debian.org/$codename/$arch/$i/download"
       if [ -n "$PLATFORMSH_RECIPES_DEBUG" ]; then
         echo -e "\033[0;36m[debug] $curl_cmd\033[0m"
       fi
-      if ! pkg_url=$($curl_cmd | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb'); then
-        if ! pkg_url=$($curl_cmd | grep -oP 'http://security.debian.org/debian-security/pool/updates/main/.*?\.deb'); then
-          :
+      if curl_cmd_output=$($curl_cmd); then
+        if ! pkg_url=$(echo $curl_cmd_output | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb'); then
+          if ! pkg_url=$(echo $curl_cmd_output | grep -oP 'http://security.debian.org/debian-security/pool/updates/main/.*?\.deb'); then
+            :
+          fi
+        fi
+      fi
+      # packages.debian.org is very unreliable, so caching the response so if cached, we can fallback to that
+      if [ -n "$pkg_url" ]; then
+        echo -n "$pkg_url" > ${cache}
+      else
+        if [ -f $cache ]; then
+          echo -e "\033[0;33m[warning] packages.debian.org is slow to respond, fetching the latest downloaded version for $i.\033[0m"
+          pkg_url=$(cat $cache)
         fi
       fi
     fi
