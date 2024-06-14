@@ -34,10 +34,24 @@ function install_debian_url() {
   for i in "$@"; do
     local pkg_url=$i
     local pkg_name=$(basename $pkg_url)
-    echo "Installing ${pkg_name}..."
+    local pkg_name_only=${pkg_name%%_*}
+    local cache_pkg_dir=${PLATFORM_CACHE_DIR}/platformsh-recipes/build/${pkg_name_only}
+    mkdir -p $cache_pkg_dir
+    local cache_pkg=${PLATFORM_CACHE_DIR}/platformsh-recipes/build/${pkg_name_only}/${pkg_name}
+
+    echo -n "Installing ${pkg_name}..."
     mkdir -p /tmp/${pkg_name}
     cd /tmp/${pkg_name}
-    wget -q "$pkg_url" -O "${pkg_name}"
+
+    if [ -f $cache_pkg ]; then
+      cp ${cache_pkg} ${pkg_name}
+      echo " [cached pkg]"
+    else
+      wget -q "$pkg_url" -O "${pkg_name}"
+      rm -f ${cache_pkg_dir}/*.deb && cp ${pkg_name} ${cache_pkg_dir}
+      echo ""
+    fi
+
     ar x ${pkg_name}
     tar -xf data.tar.xz
     [ -d usr/bin ] && cp -R usr/bin/* $PLATFORM_APP_DIR/.global/bin
@@ -70,21 +84,30 @@ function install_debian() {
       if [ -n "$PLATFORMSH_RECIPES_DEBUG" ]; then
         echo -e "\033[0;36m[debug] $curl_cmd\033[0m"
       fi
-      if curl_cmd_output=$($curl_cmd); then
-        if ! pkg_url=$(echo $curl_cmd_output | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb'); then
-          if ! pkg_url=$(echo $curl_cmd_output | grep -oP 'http://security.debian.org/debian-security/pool/updates/main/.*?\.deb'); then
-            :
+      # Within a day, we always used cached package version
+      # 1440 minutes = 24hs
+      if [ -f $cache ] && find $cache -mmin -1440 | grep . 2>&1 > /dev/null; then
+        # echo -e "\033[0;35m[info] fetching latest downloaded version for $i.\033[0m"
+        pkg_url=$(cat $cache)
+        echo -n "[cached version] "
+      else
+        if curl_cmd_output=$($curl_cmd); then
+          if ! pkg_url=$(echo $curl_cmd_output | grep -oP 'http://http.us.debian.org/debian/pool/main/.*?\.deb'); then
+            if ! pkg_url=$(echo $curl_cmd_output | grep -oP 'http://security.debian.org/debian-security/pool/updates/main/.*?\.deb'); then
+              :
+            fi
           fi
         fi
-      fi
-      # packages.debian.org is very unreliable, so caching the response so if cached, we can fallback to that
-      if [ -n "$pkg_url" ]; then
-        echo -n "$pkg_url" > ${cache}
-      else
-        if [ -f $cache ]; then
-          echo -e "\033[0;33m[warning] packages.debian.org is slow to respond, fetching the latest downloaded version for $i.\033[0m"
-          pkg_url=$(cat $cache)
+        # packages.debian.org is very unreliable, so caching the response so if cached, we can fallback to that
+        if [ -n "$pkg_url" ]; then
+          echo -n "$pkg_url" > ${cache}
         fi
+      fi
+
+      # if there's a cached response but no pkg_url, use that
+      if [ -z "$pkg_url" ] && [ -f $cache ]; then
+        echo -e "\033[0;33m[warning] packages.debian.org is not currently reliable, fetching the latest downloaded version for $i.\033[0m"
+        pkg_url=$(cat $cache)
       fi
     fi
 
