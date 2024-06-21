@@ -11,6 +11,10 @@ set -e -o pipefail
 
 source /etc/os-release
 
+# This is for testing purposes
+VERSION_ID=${VERSION_ID_TEST_OVERRIDE-$VERSION_ID}
+VERSION_CODENAME=${VERSION_CODENAME_TEST_OVERRIDE-$VERSION_CODENAME}
+
 # Map uname -m output to Debian architecture names
 arch=$(uname -m)
 case $arch in
@@ -58,7 +62,7 @@ function install_debian_url() {
     [ -d lib ] && cp -R lib/* $PLATFORM_APP_DIR/.global/lib
     [ -d usr/lib ] && cp -R usr/lib/* $PLATFORM_APP_DIR/.global/lib
     [ -d usr/share ] && cp -R usr/share/* $PLATFORM_APP_DIR/.global/share
-    cd
+    cd - > /dev/null
     rm -fr /tmp/${pkg_name}
   done
 }
@@ -130,6 +134,10 @@ function install_debian() {
           ;;
         libperl5.26)
           pkg_url="https://snapshot.debian.org/archive/debian/20181010T154208Z/pool/main/p/perl/libperl5.26_5.26.2-7%2Bb1_$arch.deb"
+          ;;
+        bsdmainutils)
+          pkg_url="https://snapshot.debian.org/archive/debian/20170412T152115Z/pool/main/b/bsdmainutils/bsdmainutils_9.0.12%2Bnmu1_$arch.deb"
+          ;;
       esac
     fi
 
@@ -159,6 +167,11 @@ if [ -f $PLATFORM_APP_DIR/.global/bin/telnet.netkit ]; then
 fi
 if [ -f $PLATFORM_APP_DIR/.global/bin/vim.nox ]; then
   mv $PLATFORM_APP_DIR/.global/bin/vim.nox $PLATFORM_APP_DIR/.global/bin/vi
+fi
+if [ "$VERSION_ID" -le "10" ]; then
+  install_debian bsdmainutils
+else
+  install_debian bsdextrautils
 fi
 
 # screen tweaks
