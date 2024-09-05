@@ -67,6 +67,7 @@ while true ; do
       case "$2" in
         "") shift 2 ;;
         *)
+          perl_show='[\$7] \$1 \$4\$5'
           grep_after="| grep -a '$2'"
           shift 2 ;;
       esac ;;
@@ -75,6 +76,7 @@ while true ; do
       case "$2" in
         "") shift 2 ;;
         *)
+          perl_show='[\$7] \$1 \$4'
           grep_after="| grep -a '$2'"
           shift 2 ;;
       esac ;;

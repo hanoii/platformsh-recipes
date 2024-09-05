@@ -18,7 +18,7 @@ fi
 
 httpaccess=$(platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} 2>&1)
 # { grep deny || test $? = 1; } from https://stackoverflow.com/a/49627999
-blocked_ips=($(echo "$httpaccess" | { grep deny || test $? = 1; }  | perl -pe "s/.*?address: ([^\s\/]*).*/\$1/" | xargs -I {} echo '{}' | xargs))
+blocked_ips=($(echo "$httpaccess" | { grep deny || test $? = 1; }  | perl -pe "s/.*?address: '?([^\s\/]*).*/\$1/" | xargs -I {} echo '{}' | xargs))
 blocked_already=$(echo "$httpaccess" | { grep deny || test $? = 1; }  | perl -pe "s/.*?address: ([^\s]*).*/\$1/" | xargs -I {} echo '--access deny:{}' | xargs)
 # The first grep is a whitelist, the second
 cmd_extra="grep -Pi '${PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST//\'/\'\"\'\"\'}'"

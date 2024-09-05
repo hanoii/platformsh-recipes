@@ -56,6 +56,10 @@ commands:
     usage: Block BAD IPs
     cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/logs/ipblock.sh "$@"
 
+  ipblock:list:
+    usage: Show platform http access information on master
+    cmd: platform httpaccess -e master
+
   ipblock:add:
     usage: Add IP to the block list
     cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/commands/ipblock-add.sh "$@"

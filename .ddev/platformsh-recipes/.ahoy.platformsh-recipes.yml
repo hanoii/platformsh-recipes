@@ -8,6 +8,30 @@ commands:
       set | grep -e ^PLATFORMSH_RECIPES_
       echo -e "\033[0m"
 
+  maintenance503:set:
+    usage: Set the needed environment variable
+    cmd: platform variable:create --yes --update --level=environment --inheritable=false --value=true env:PLATFORMSH_RECIPES_MAINTENANCE_503
+
+  maintenance503:dbdump:
+    usage: Dump the whole database
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/commands/maintenance503-dbdump.sh "$@"
+
+  maintenance503:dbdump:clear:
+    usage: Remove all dumps created by this feature.
+    cmd: |
+      gum spin --title="Removing dump.sql on platform..." -- platform ssh "rm -f \$PLATFORM_APP_DIR/.deploy/dump-*.sql"
+
+  maintenance503:dbrestore:
+    usage: Restore the whole database
+    cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/commands/maintenance503-dbrestore.sh "$@"
+
+  maintenance503:clear:
+    usage: Remove the needed environment variable and dump
+    cmd: |
+      platform variable:delete --yes env:PLATFORMSH_RECIPES_MAINTENANCE_503
+      gum log --level warn "Remember to clear dumps after checking all is ok."
+      gum log --level warn "You can use the 'ahoy platform maintenance503:dbdump:clear'"
+
   log:php:
     usage: Get lines of /var/log/php.access.log with useful filters
     cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/logs/php.sh "$@"
@@ -32,6 +56,9 @@ commands:
     usage: Block BAD IPs
     cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/logs/ipblock.sh "$@"
 
+  ipblock:list:
+    usage: Show platform http access information on master
+    cmd: platform httpaccess -e master
 
   ipblock:add:
     usage: Add IP to the block list
@@ -40,3 +67,4 @@ commands:
   ipblock:rm:
     usage: Remove IP from the block list
     cmd: ${PLATFORMSH_RECIPES_INSTALLDIR-.}/platformsh-recipes/scripts/commands/ipblock-remove.sh "$@"
+
