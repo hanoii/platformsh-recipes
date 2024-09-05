@@ -21,19 +21,23 @@ if [[ $(platform --version) =~ "Platform.sh CLI 4".* ]]; then
   SHELL=$SHELL platform self:install -qy || true
 fi
 
-# Cert load
-([ ! -z "${PLATFORMSH_CLI_TOKEN:-}" ] && platform ssh-cert:load -y) || true
+if [ ! -z "$PLATFORMSH_CLI_TOKEN" ]; then
+  # Cert load
+  platform ssh-cert:load -y
 
-if [[ ! -d .platform/local ]]; then
-  if [[ "$PLATFORM_PROJECT" != "" ]]; then
-    printf "* Setting remote project to $PLATFORM_PROJECT...\n"
-    platform -y project:set-remote $PLATFORM_PROJECT
-  else
-    printf "✗ Platform.sh project was not set, needed for drush aliases. Please set PLATFORM_PROJECT env var.\n"
+  if [[ ! -f .platform/local/project.yaml ]]; then
+    if [[ "$PLATFORM_PROJECT" != "" ]]; then
+      printf "* Setting remote project to $PLATFORM_PROJECT...\n"
+      platform -y project:set-remote $PLATFORM_PROJECT
+    else
+      printf "✗ Platform.sh project was not set, needed for drush aliases. Please set PLATFORM_PROJECT env var.\n"
+    fi
   fi
-fi
 
-# And create drush aliases, we need to have set remote
-if [[ "$DDEV_PROJECT_TYPE" == *"drupal"* ]] && [[ -d .platform/local ]]; then
-  ([ ! -z "${PLATFORMSH_CLI_TOKEN:-}" ] && platform drush-aliases -r -g ${DDEV_PROJECT} -y) || true
+  # And create drush aliases, we need to have set remote
+  if [[ "$DDEV_PROJECT_TYPE" == *"drupal"* ]] && [[ -f .platform/local/project.yaml ]]; then
+    platform drush-aliases -r -g ${DDEV_PROJECT} -y
+  fi
+else
+  gum log --level=warn PLATFORMSH_CLI_TOKEN is empty, the usual platform post-start commands have not run.
 fi

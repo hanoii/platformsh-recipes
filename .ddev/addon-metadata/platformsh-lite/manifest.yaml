@@ -1,9 +1,7 @@
 name: platformsh-lite
 repository: https://github.com/hanoii/ddev-platformsh-lite/tarball/main
 version: ""
-dependencies:
-    - pimp-my-shell
-install_date: "2024-05-09T13:21:18-03:00"
+install_date: "2024-09-05T19:06:26-03:00"
 project_files:
     - config.platformsh-lite.yaml
     - docker-compose.platformsh-lite.yaml
@@ -11,11 +9,11 @@ project_files:
     - platformsh-lite/.ahoy.platformsh-lite.yml
     - platformsh-lite/.ahoy.ifnotpresent.yml
     - platformsh-lite/scripts/check-platformsh-cli-token.sh
+    - platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
     - platformsh-lite/scripts/db-pull.sh
     - platformsh-lite/scripts/push-log.sh
     - platformsh-lite/scripts/switch.sh
     - platformsh-lite/hooks/post-start.sh
-    - pimp-my-shell/hooks/post-import-db.d
     - commands/web/platform
     - commands/host/platform:tunnels
 global_files: []

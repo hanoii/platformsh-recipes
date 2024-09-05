@@ -41,7 +41,7 @@ if [[ ! -f $env_file ]]; then
 
   # detect defaults
   if ! environment=$(gum spin --show-output --title="Detecting production environment" -- platform environments --type=production --pipe); then
-    gum log --level error "Detecting platform production environment"
+    gum log --level error "Detecting platform production environment, you might want to check your PLATFORMSH_CLI_TOKEN on your config.local.yaml"
     exit 1
   fi
   if ! app=$(gum choose --select-if-one --header="Choose default app to pull database from..." $(gum spin --show-output --title="Querying apps..." -- platform apps -e $environment --format=plain --no-header --columns=name,type | tr '\t' '|') | sed 's/|.*//'); then
@@ -110,6 +110,8 @@ shift $((OPTIND-1))
 
 filename=dump-${relationship_name}-$environment.sql.gz
 
+gum log --level info "Creating $filename..."
+
 if [[ "$download" == "true"  ]]; then
   if [ ! -z ${DDEV_PLATFORMSH_LITE_DRUSH_SQL_EXCLUDE+x} ]; then
     structure_tables=$DDEV_PLATFORMSH_LITE_DRUSH_SQL_EXCLUDE
@@ -135,9 +137,15 @@ if [[ "$download" == "true"  ]]; then
       cmd_exclude_tables+="--exclude-table=$t "
     done
     temp_filename=$(mktemp)
-    gum spin --show-output --title="Dumping schema only tables..." -- platform -y db:dump -A $app -r ${relationship_name} $cmd_environment $cmd_structure_tables --schema-only --gzip -o > $temp_filename
+    temp_filename_schema=$(mktemp)
+    temp_filename_data=$(mktemp)
+    gum spin --show-output --title="Dumping schema only tables..." -- platform -y db:dump -A $app -r ${relationship_name} $cmd_environment $cmd_structure_tables --schema-only --gzip -o > $temp_filename_schema
   fi
-  gum spin --show-output --title="Dumping data tables..." -- platform -y db:dump -A $app -r ${relationship_name} $cmd_environment $cmd_exclude_tables --gzip -o >> $temp_filename
+  gum spin --show-output --title="Dumping data tables..." -- platform -y db:dump -A $app -r ${relationship_name} $cmd_environment $cmd_exclude_tables --gzip -o > $temp_filename_data
+  # attempt to remove /*!999999\- enable the sandbox mode */ if there
+  # @see https://mariadb.org/mariadb-dump-file-compatibility-change/
+  cat $temp_filename_schema | gunzip | tail +2 | gzip > $temp_filename
+  cat $temp_filename_data | gunzip | tail +2 | gzip >> $temp_filename
   rm -f $filename
   mv $temp_filename $filename
 else

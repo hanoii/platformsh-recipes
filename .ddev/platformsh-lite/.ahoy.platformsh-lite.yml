@@ -3,12 +3,21 @@ ahoyapi: v2
 commands:
   push:log:
     usage: "See the latest push activity log."
-    cmd: DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform push:log}" .ddev/platformsh-lite/scripts/push-log.sh "$@"
+    cmd: |
+      set -e
+      .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
+      DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform push:log}" .ddev/platformsh-lite/scripts/push-log.sh "$@"
 
   db:pull:
     usage: "Pull database from the production environment."
-    cmd: DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform db:pull}" .ddev/platformsh-lite/scripts/db-pull.sh "$@"
+    cmd: |
+      set -e
+      .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
+      DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform db:pull}" .ddev/platformsh-lite/scripts/db-pull.sh "$@"
 
   switch:
     usage: "Select a different project to run 'platform' commands against"
-    cmd: .ddev/platformsh-lite/scripts/switch.sh
+    cmd: |
+      set -e
+      .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
+      .ddev/platformsh-lite/scripts/switch.sh
