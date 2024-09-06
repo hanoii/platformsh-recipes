@@ -17,6 +17,8 @@ A collection of scripts, commands, recipes and notes for platform.sh
   * [404s](#404s)
   * [User-Agents](#user-agents)
   * [IP addresses](#ip-addresses)
+  * [URIs and Paths](#uris-and-paths)
+  * [HTTP status filter](#http-status-filter)
   * [RPMs](#rpms)
     + [php.access.log](#phpaccesslog)
     + [access.log](#accesslog)
@@ -134,6 +136,8 @@ All of the ahoy commands below have the following flags
 - `--all`, display logs without filtering by date
 - `--404`, show only 404s
 - `--not-404`, exclude 404s
+- `--raw`, will show the output of the log as is, it should be used last after
+  any other flag.
 
 Some comamnds have extra arguments that are noted below.
 
@@ -271,8 +275,8 @@ ahoy log:access --ua=amazon
 
 ### IP addresses
 
-Another command can only filter out accesses by IP, that can be then combined
-with the above to gather more information.
+You can filter out accesses by IP, that can be then combined with the above to
+gather more information.
 
 ```
 ahoy log:access --ip
@@ -285,6 +289,32 @@ If you want to see more details about what was accessed by a single ip:
 ```
 ahoy log:access --ip=w.x.y.z
 ```
+
+### URIs and Paths
+
+You can also group by URI and or path, using `--uri`, `--uri=/something`,
+`--path` and `--path=/something`. The difference between the two is that uri is
+the path excludes the query string.
+
+i.e.
+
+```
+ahoy log:access --uri
+ahoy log:access --uri=/presentation-library
+ahoy log:access --path
+ahoy log:access --path=/presentation-library
+
+```
+
+As with most commands, some of the flags can be combined, knowing that the order
+of the flags is important.
+
+### HTTP status filter
+
+You can add `--status=HTTP_STATUS` to any of the `ahoy log:access` command
+explained above.
+
+i.e.: `ahoy log:access --uri --status=400`
 
 ### RPMs
 
