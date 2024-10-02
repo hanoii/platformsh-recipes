@@ -21,6 +21,6 @@
 #         source_path: 'deploy'
 
 PHP_FPM_CUSTOM_CONF=$PLATFORM_APP_DIR/.deploy/php-fpm.conf
-PHP_FPM_BIN=$(whereis php-fpm | awk '{print $2}')
-cp /etc/php/${PHP_FPM_BIN#/usr/sbin/php-fpm}/fpm/php-fpm.conf "$PHP_FPM_CUSTOM_CONF"
+PHP_FPM_CONF=$(start-php-app -t 2>&1 | grep  -v -e "^$" | sort | uniq | perl -pe "s/.*?([^\s]*php-fpm.conf).*/\1/g")
+cp "$PHP_FPM_CONF" "$PHP_FPM_CUSTOM_CONF"
 sed -i 's/access.format.*/access.format="%{%FT%TZ}t %{HTTP_X_CLIENT_IP}e %m %s %{mili}d ms %{kilo}M kB %C%% %{HTTP_HOST}e %{REQUEST_URI}e"/' "$PHP_FPM_CUSTOM_CONF"
