@@ -1,5 +1,5 @@
-#ddev-generated
 #!/bin/bash
+#ddev-generated
 
 if [[ "$0" == *"switch.sh"* ]]; then
   gum log --level error The script is meant to be source\'d.

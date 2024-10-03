@@ -1,7 +1,7 @@
 name: platformsh-lite
 repository: https://github.com/hanoii/ddev-platformsh-lite/tarball/main
 version: ""
-install_date: "2024-09-05T19:06:26-03:00"
+install_date: "2024-10-03T09:11:03-03:00"
 project_files:
     - config.platformsh-lite.yaml
     - docker-compose.platformsh-lite.yaml
@@ -12,6 +12,7 @@ project_files:
     - platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
     - platformsh-lite/scripts/db-pull.sh
     - platformsh-lite/scripts/push-log.sh
+    - platformsh-lite/scripts/storage.sh
     - platformsh-lite/scripts/switch.sh
     - platformsh-lite/hooks/post-start.sh
     - commands/web/platform

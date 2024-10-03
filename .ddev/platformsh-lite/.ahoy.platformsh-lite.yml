@@ -1,6 +1,12 @@
 #ddev-generated
 ahoyapi: v2
 commands:
+  storage:
+    usage: "See plan storage usage across apps and services."
+    cmd: |
+      .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
+      DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform storage}" .ddev/platformsh-lite/scripts/storage.sh "$@"
+
   push:log:
     usage: "See the latest push activity log."
     cmd: |

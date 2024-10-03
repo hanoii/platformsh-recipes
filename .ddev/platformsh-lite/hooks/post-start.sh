@@ -19,13 +19,16 @@ if [[ $(platform --version) =~ "Platform.sh CLI 4".* ]]; then
   # Install shell integration to avoid prompt
   # SHELL=$SHELL because of https://github.com/platformsh/cli/issues/117
   SHELL=$SHELL platform self:install -qy || true
+else
+  gum log --level=info Updating platformsh-cli...
+  curl -fsSL https://raw.githubusercontent.com/platformsh/cli/main/installer.sh | bash | grep -E "Unpacking|newest" --color=never
 fi
 
 if [ ! -z "$PLATFORMSH_CLI_TOKEN" ]; then
   # Cert load
   platform ssh-cert:load -y
 
-  if [[ ! -f .platform/local/project.yaml ]]; then
+  if [[ ! -f .platform/local/project.yaml ]] || [[ ! -s .platform/local/project.yaml ]]; then
     if [[ "$PLATFORM_PROJECT" != "" ]]; then
       printf "* Setting remote project to $PLATFORM_PROJECT...\n"
       platform -y project:set-remote $PLATFORM_PROJECT
