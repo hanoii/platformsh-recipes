@@ -55,7 +55,7 @@ while true ; do
           shift 2 ;;
       esac ;;
     --ua)
-      perl_show='\$1 \$9'
+      perl_show='\$9'
       case "$2" in
         "") shift 2 ;;
         *)
