@@ -1,0 +1,9 @@
+#ddev-generated - This file can be copied to your projedt root and be
+# as a starting point for a more complex ahoy script
+ahoyapi: v2
+commands:
+  drupal:
+    usage: 'Drupal commands'
+    imports:
+      # addon needs to be installed locally on ddev with 'ddev get .'
+      - ./.ddev/drupal/.ahoy.drupal.yml

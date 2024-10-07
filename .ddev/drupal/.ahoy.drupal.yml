@@ -1,0 +1,6 @@
+#ddev-generated
+ahoyapi: v2
+commands:
+  drush:uli:
+    usage: A fancier drush:uli for our own ahoy commands
+    cmd: .ddev/drupal/scripts/drush-uli.sh "$@"
