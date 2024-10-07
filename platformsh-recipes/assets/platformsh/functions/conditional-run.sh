@@ -210,18 +210,10 @@ platformsh_recipes_cr_deploy_preset_drupal() {
 
   if [[ $updb -eq 1 ]]; then
     echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Updating db...\033[0m"
-    drush -y updatedb --no-cache-clear
+    drush -y updatedb
     echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Db updated!\033[0m"
   else
     echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping db update, not needed!\033[0m"
-  fi
-
-  if [[ $cr -eq 1 ]]; then
-    echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Clearing caches a first time...\033[0m"
-    drush -y cache:rebuild
-    echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Caches cleared!\033[0m"
-  else
-    echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping cache clear, not needed!\033[0m"
   fi
 
   if [[ $cim -eq 1 ]]; then
