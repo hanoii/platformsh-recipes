@@ -218,7 +218,7 @@ platformsh_recipes_cr_deploy_preset_drupal() {
 
   if [[ $cim -eq 1 ]]; then
     echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Importing config...\033[0m"
-    drush -y config:import
+    drush -y config:import --diff
     echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Config imported!\033[0m"
   else
     echo -e "\033[0;33m[$(date -u "+%Y-%m-%d %T.%3N")] [warning] Skipping config import, not needed!\033[0m"
