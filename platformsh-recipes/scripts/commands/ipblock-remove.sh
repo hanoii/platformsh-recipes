@@ -53,18 +53,27 @@ for i in ${!ips_array[*]}; do
   if [[ ! "${ips_array[$i]}" =~ ^"$1" ]]; then
     block="$block --access deny:${ips_array[$i]}"
   else
-    found="${found}IP '$1' matched ${ips_array[$i]}, will be removed!\n"
+    found="${found}IP '$1' is blocked by ${ips_array[$i]}\n"
   fi
 done
+
+whitelist_filename=.deploy/.platformsh-recipes/ipblock.whitelist
 
 if [ -z "$found" ]; then
   >&2 echo -e "\033[0;32m\nNo IP matching $1 was found!\n\033[0m"
 else
   if [ "$run" == "true" ]; then
+    gum log --level info "Whitelisting $1..."
+    platform ssh -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} "echo $1 >> \$PLATFORM_APP_DIR/${whitelist_filename}"
+    gum log --level info "Removing $1 from the deny list..."
     platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} $block
   else
     >&2 echo -e "\033[0;36m\nIf you want to remove the IPs matching $1 from the currently blocked IPs, run the following...\n\033[0m"
     >&2 echo -e "platform httpaccess -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master}\\\\\n\t\t$block"
+
+    >&2 echo -e "\033[0;36m\nYou need to whitelist $1 before by running the following:\n\033[0m"
+    >&2 echo -e "platform ssh -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} \"echo $1 >> \\\$PLATFORM_APP_DIR/${whitelist_filename}\""
+    >&2 echo -e "\033[0;33m\nAltenatively, you can run the same command but adding '--run' before the IP.\033[0m"
   fi
 
   >&2 echo -e "\033[0;32m\n$found\033[0m"
