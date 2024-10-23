@@ -12,7 +12,7 @@ A collection of scripts, commands, recipes and notes for platform.sh
   * [`.environment`](#environment)
   * [`.bashrc`](#bashrc)
 - [Performance troubleshooting](#performance-troubleshooting)
-  * [Automatic ipblocking](#automatic-ipblocking)
+  * [Automatic IP Blocking](#automatic-ip-blocking)
   * [ahoy commands](#ahoy-commands)
   * [Time/memory used](#timememory-used)
   * [404s](#404s)
@@ -129,7 +129,7 @@ to do that you need to make available the following environment variables:
 - `PLATFORM_PROJECT`
 - `PLATFORMSH_RECIPES_MAIN_BRANCH=main` (optional, defaults to `master`)
 
-### Automatic ipblocking
+### Automatic IP Blocking
 
 This ships with a [script](platformsh-recipes/scripts/logs/ipblock.sh) that can
 be configured to search for certain patterns on the access.log and, if run
