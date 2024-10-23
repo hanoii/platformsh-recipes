@@ -145,8 +145,7 @@ With ahoy, you can run it with `ahoy log:ipblock`
 > it will do the same chack but only giving you the platform command to run from
 > ddev instead of doing it automatically.
 
-As an exampe and a starting point, this is a configuration I am using on one of
-my projects:
+As an exampe and a starting point, this is a real configuration that is in use:
 
 <!-- prettier-ignore -->
 ```yml
