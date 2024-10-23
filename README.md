@@ -12,6 +12,7 @@ A collection of scripts, commands, recipes and notes for platform.sh
   * [`.environment`](#environment)
   * [`.bashrc`](#bashrc)
 - [Performance troubleshooting](#performance-troubleshooting)
+  * [Automatic ipblocking](#automatic-ipblocking)
   * [ahoy commands](#ahoy-commands)
   * [Time/memory used](#timememory-used)
   * [404s](#404s)
@@ -127,6 +128,69 @@ to do that you need to make available the following environment variables:
 - `PLATFORMSH_CLI_TOKEN`
 - `PLATFORM_PROJECT`
 - `PLATFORMSH_RECIPES_MAIN_BRANCH=main` (optional, defaults to `master`)
+
+### Automatic ipblocking
+
+This ships with a [script](platformsh-recipes/scripts/logs/ipblock.sh) that can
+be configured to search for certain patterns on the access.log and, if run
+within platform, it will automatically block what it consideres an IP with a bad
+behavior.
+
+With ahoy, you can run it with `ahoy log:ipblock`
+
+> [!TIP] The script can be run from a platform environment in which it will
+> automatically block the IPs or from ddev if this is added as an addon in which
+> it will do the same chack but only giving you the platform command to run from
+> ddev instead of doing it automatically.
+
+As an exampe and a starting point, this is a configuration I am using on one of
+my projects:
+
+<!-- prettier-ignore -->
+```yml
+    env:
+        # Both blacklist and whitelist are Perl regex patterns used in the 
+        # automatic IP blocking process.
+        # The whitelist patterns are filtered out first before, and then the
+        # blacklist patterns are used to find missbehaving IPs
+        # i.e. wp-content in a path is blacklisted, but wp-content/uploads is
+        # whitelisted allowing wp-content/uploads to be OK but any other
+        # wp-content/* to be considerd bad
+        PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST: 'select[^a-zA-Z0-9_\-\/\s]|\.env|sysgmdate(\(|%28)|wp-content|wp-admin|go-http-client|(?<!/index)\.php|\.jsp HTTP|\.html HTTP'
+        PLATFORMSH_RECIPES_IPBLOCK_WHITELIST: 'wp-content/plugins/download-manager/assets/file-type-icons/_blank.png|wp-content/uploads'
+```
+
+And I have an accompanying cron entry:
+
+<!-- prettier-ignore -->
+```yml
+    ipblock:
+        spec: 'H/5 * * * *'
+        commands:
+            start: |
+                if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
+                    ahoy log:ipblock
+                fi
+```
+
+The two configurations entries are case insensitive regex patterns. Different
+patterns can be OR'ed as per the Perl Regular Expression syntax, which are used
+by `grep -P`.
+
+- `PLATFORMSH_RECIPES_IPBLOCK_WHITELIST`: The pattern that will be used to
+  filter out any entry that maches the pattern.
+- `PLATFORMSH_RECIPES_IPBLOCK_BLACKLIST`: The pattern that will be used to get
+  the IPs that matches the pattern.
+
+The whitelist is run first, so you can use the whitelist to make sure that
+certain patterns that would otherwise be blocked by the blacklist pattern are
+excluded from it.
+
+In the example above, for example, `wp-content` is looked for blocking IPs, but
+with the configured whitelist, both
+`wp-content/plugins/download-manager/assets/file-type-icons/_blank.png` and
+`wp-content/uploads` are considered valid requests and excluded before looking
+for the blocklist pattern.
 
 ### ahoy commands
 
