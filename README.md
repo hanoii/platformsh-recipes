@@ -138,7 +138,9 @@ behavior.
 
 With ahoy, you can run it with `ahoy log:ipblock`
 
-> [!TIP] The script can be run from a platform environment in which it will
+> [!TIP]
+>
+> The script can be run from a platform environment in which it will
 > automatically block the IPs or from ddev if this is added as an addon in which
 > it will do the same chack but only giving you the platform command to run from
 > ddev instead of doing it automatically.
