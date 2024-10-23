@@ -40,7 +40,7 @@ whitelist=
 whitelist_filename=$PLATFORM_APP_DIR/.deploy/.platformsh-recipes/ipblock.whitelist
 echo "$whitelist_filename"
 if [ -f "$whitelist_filename" ]; then
-  whitelist=$(cat "$whitelist_filename")
+  whitelist=$(cat "$whitelist_filename" | grep -v -e "^#")
 fi
 
 for i in ${!ips_array[*]}; do
