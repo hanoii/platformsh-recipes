@@ -2,7 +2,7 @@
 #ddev-generated
 set -e
 
-OPTIONS=`getopt -o '' -l not404,404,ip::,uri::,path::,days:,all,extension::,extra: -- "$@"`
+OPTIONS=`getopt -o '' -l raw,not404,404,ip::,uri::,path::,days:,all,extension::,extra: -- "$@"`
 eval set -- "$OPTIONS"
 
 time=now
@@ -26,6 +26,11 @@ grep_extension=
 # extract options and their arguments into variables.
 while true ; do
   case "$1" in
+    --raw)
+      perl_start=
+      perl_show=
+      perl_end=
+      shift ;;
     --days)
       case "$2" in
         "") time=now ; shift 2 ;;
