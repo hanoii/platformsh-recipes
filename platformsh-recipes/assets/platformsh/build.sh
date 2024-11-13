@@ -150,7 +150,6 @@ function install_debian() {
 }
 
 # Install debian packages manually
-VERSION_CODENAME_OVERRIDE=unstable VERSION_ARCH_OVERRIDE=all install_debian kitty-terminfo
 VERSION_CODENAME_OVERRIDE=${VERSION_CODENAME//buster/bullseye} install_debian ansilove
 install_debian colorized-logs
 install_debian htop libnl-3-200 libnl-genl-3-200
@@ -177,9 +176,14 @@ fi
 # screen tweaks
 cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc ~/.screenrc
 
+# kitty-terminfo
+echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing kitty term-info...\033[0m"
+mkdir -p $PLATFORM_APP_DIR/.global/share/terminfo/x
+wget -q "https://github.com/kovidgoyal/kitty/raw/refs/heads/master/terminfo/x/xterm-kitty" -P $PLATFORM_APP_DIR/.global/share/terminfo/x
+
 # Install fzf
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing fzf...\033[0m"
-wget -q https://github.com/junegunn/fzf/releases/download/0.52.1/fzf-0.52.1-linux_amd64.tar.gz -O - | tar -zx -C $PLATFORM_APP_DIR/.global/bin
+wget -q https://github.com/junegunn/fzf/releases/download/v0.56.2/fzf-0.56.2-linux_amd64.tar.gz -O - | tar -zx -C $PLATFORM_APP_DIR/.global/bin
 
 # Install platform cli
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing platform cli...\033[0m"
@@ -190,4 +194,4 @@ fi
 
 # Install ahoy
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing ahoy...\033[0m"
-wget -q https://github.com/ahoy-cli/ahoy/releases/download/v2.1.1/ahoy-bin-linux-amd64 -O $PLATFORM_APP_DIR/.global/bin/ahoy && chmod +x $PLATFORM_APP_DIR/.global/bin/ahoy
+wget -q https://github.com/ahoy-cli/ahoy/releases/download/v2.2.0/ahoy-bin-linux-amd64 -O $PLATFORM_APP_DIR/.global/bin/ahoy && chmod +x $PLATFORM_APP_DIR/.global/bin/ahoy
