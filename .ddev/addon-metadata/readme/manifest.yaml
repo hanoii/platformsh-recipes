@@ -1,7 +1,7 @@
 name: readme
 repository: https://github.com/hanoii/ddev-readme/tarball/main
 version: ""
-install_date: "2024-10-23T16:00:44-03:00"
+install_date: "2024-11-13T09:47:59-03:00"
 project_files:
     - web-build/Dockerfile.readme
     - readme/.gitignore
