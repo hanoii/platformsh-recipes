@@ -4,6 +4,8 @@ cd /var/www/html
 export PLATFORMSH_RECIPES_INSTALLDIR=$(pwd)
 mkdir -p tmp-for-test
 
+export PLATFORMSH_RECIPES_DEBUG=1
+
 # bookworm
 export VERSION_ID_TEST_OVERRIDE=12
 export VERSION_CODENAME_TEST_OVERRIDE=bookworm
