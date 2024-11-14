@@ -2,7 +2,7 @@
 #ddev-generated
 set -e
 
-OPTIONS=`getopt -o '' -l raw,extra:,days:,ip::,ua::,uri::,path::,status:,404,not-404,all,hide-total -- "$@"`
+OPTIONS=`getopt -o '' -l extension::,raw,extra:,days:,ip::,ua::,uri::,path::,status:,404,not-404,all,hide-total -- "$@"`
 eval set -- "$OPTIONS"
 
 
@@ -93,6 +93,17 @@ while true ; do
     --extra)
           grep_extra="$grep_extra | $2"
           shift 2 ;;
+    --extension)
+      perl_show='\$4'
+      case "$2" in
+        "")
+          perl_show='\$4'
+          grep_after='|  grep -a -P '"'"'\.[^/]*?$'"'"' | perl -pe '"'"'s/.*\.([^\?]*).*/$1/'"'"
+          shift 2 ;;
+        *)
+          grep_after='| grep -a -P '"'"'\.'"$2"'$'"'"
+          shift 2 ;;
+      esac ;;
     --) shift ; break ;;
     *) echo "Internal error!" ; exit 1 ;;
   esac
