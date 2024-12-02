@@ -9,7 +9,7 @@ RUN set -eux; \
 
 # fzf et al
 RUN set -eux; \
-    FZF_SHA1=215ab48222ac5fa8855c1e5bbf56742276b57324; \
+    FZF_SHA1=add1aec685ffe9033bb1fdcaf0df0eae95c9cacd; \
     FZFGIT_SHA1=f730cfa1860acdb64597a0cf060d4949f1cd02a8; \
     mkdir -p /opt/fzf; \
     cd /opt/fzf; \
@@ -64,12 +64,20 @@ RUN set -eux; \
 
 # eza
 RUN set -eux; \
-    EZA_VERSION=0.20.7; \
+    EZA_VERSION=0.20.10; \
     wget -q https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/eza_`uname -m`-unknown-linux-gnu.tar.gz -O- | tar -zxf - -C /usr/local/bin; \
     wget https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/completions-${EZA_VERSION}.tar.gz -O eza-completions.tar.gz; \
     tar -xzf eza-completions.tar.gz --strip-components=3 -C /etc/bash_completion.d/ ./target/completions-${EZA_VERSION}/eza; \
     tar -xzf eza-completions.tar.gz --strip-components=3 -C /usr/share/fish/vendor_completions.d/ ./target/completions-${EZA_VERSION}/eza.fish; \
     rm eza-completions.tar.gz;
+
+# go
+RUN set -eux; \
+    GO_VERSION=1.23.3; \
+    AARCH=$(dpkg --print-architecture); \
+    wget -q https://go.dev/dl/go${GO_VERSION}.linux-${AARCH}.tar.gz -O go.tar.gz; \
+    tar -C /usr/local -xzf go.tar.gz; \
+    rm go.tar.gz;
 
 ##
 # Tools to install under ddev non-root user
@@ -83,16 +91,27 @@ RUN set -eux; \
     fish -c "fisher install IlanCosman/tide@v6.1.1"; \
     fish -c "fisher install edc/bass@v1.0"
 
-# bun.sh
+# bun.sh - it's installed by on the user as it adds stuff to .bashrc
 RUN set -eux; \
-    BUN_VERSION=1.1.34; \
+    BUN_VERSION=1.1.38; \
     curl -fsSL https://bun.sh/install | bash -s "bun-v${BUN_VERSION}"
+
+# go tools - it's installed on the user so so that bin and pkgs are available on the user's home
+RUN set -eux; \
+    unset GOARCH; \
+    unset GOOS; \
+    SYSBOX_VERSION=0.19.0; \
+    /usr/local/go/bin/go install github.com/skx/sysbox@release-${SYSBOX_VERSION};
+RUN set -eux; \
+    unset GOARCH; \
+    unset GOOS; \
+    RECUR_VERSION=1.1.0; \
+    /usr/local/go/bin/go install github.com/dbohdan/recur@v${RECUR_VERSION};
 
 # Go back to root
 USER root:root
 
 # kitty-terminfo from directoy from their GitHub repo @ master
-# https://snapshot.debian.org/binary/kitty-terminfo/
 RUN set -eux; \
     url="https://github.com/kovidgoyal/kitty/raw/refs/tags/v0.37.0/terminfo/x/xterm-kitty"; \
     mkdir -p /usr/share/terminfo/x; \

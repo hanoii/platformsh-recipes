@@ -1,7 +1,7 @@
 name: pimp-my-shell
 repository: https://github.com/hanoii/ddev-pimp-my-shell/tarball/main
 version: ""
-install_date: "2024-11-13T09:48:02-03:00"
+install_date: "2024-12-02T16:25:33-03:00"
 project_files:
     - web-build/Dockerfile.pimp-my-shell
     - homeadditions/.bashrc.d/pimp-my-shell.sh
@@ -10,6 +10,7 @@ project_files:
     - commands/web/gum
     - commands/web/lazygit
     - commands/host/fish
+    - homeadditions/.local/bin/xdebug
     - homeadditions/.local/share/bash-completion/completions/ahoy
     - homeadditions/.local/share/fish/vendor_completions.d/ahoy.fish
     - homeadditions/.config/starship.toml
