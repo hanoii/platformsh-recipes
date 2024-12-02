@@ -138,6 +138,9 @@ function install_debian() {
         bsdmainutils)
           pkg_url="https://snapshot.debian.org/archive/debian/20170412T152115Z/pool/main/b/bsdmainutils/bsdmainutils_9.0.12%2Bnmu1_$arch.deb"
           ;;
+        inetutils-telnet)
+          pkg_url="https://snapshot.debian.org/archive/debian-security/20200824T085329Z/pool/updates/main/i/inetutils/inetutils-telnet_1.9.4-2%2Bdeb9u1_$arch.deb"
+          ;;
       esac
     fi
 
@@ -156,13 +159,16 @@ install_debian htop libnl-3-200 libnl-genl-3-200
 install_debian logrotate
 install_debian pv
 install_debian screen libutempter0
-install_debian telnet
+install_debian inetutils-telnet
 if [ $VERSION_CODENAME = "stretch" ]; then
   vim_stretch="libperl5.26"
 fi
 install_debian vim-nox vim-runtime libgpm2 liblua5.2-0 $vim_stretch
 if [ -f $PLATFORM_APP_DIR/.global/bin/telnet.netkit ]; then
   mv $PLATFORM_APP_DIR/.global/bin/telnet.netkit $PLATFORM_APP_DIR/.global/bin/telnet
+fi
+if [ -f $PLATFORM_APP_DIR/.global/bin/inetutils-telnet ]; then
+  mv $PLATFORM_APP_DIR/.global/bin/inetutils-telnet $PLATFORM_APP_DIR/.global/bin/telnet
 fi
 if [ -f $PLATFORM_APP_DIR/.global/bin/vim.nox ]; then
   mv $PLATFORM_APP_DIR/.global/bin/vim.nox $PLATFORM_APP_DIR/.global/bin/vi
