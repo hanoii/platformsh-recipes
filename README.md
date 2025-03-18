@@ -143,7 +143,7 @@ Platform.sh storage is not particularly cheap, so it's a matter of deciding
 what's best to do on each case.
 
 If you want to follow the second option, this add-on and it's
-[Platform.sh's companion](#platformsh-setup) which must be fully setup, comes
+[Platform.sh's companion](#platformsh-setup) which must be fully setup, come
 with a helper set of commands that allows you to set a flag so that Platform.sh
 responds with a 503 very early to let search-engines and users know there's a
 maintenance going on, something that's not natively supported. So you can do the
