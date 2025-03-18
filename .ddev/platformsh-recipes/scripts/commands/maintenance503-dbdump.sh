@@ -3,11 +3,11 @@
 set -e -o pipefail
 
 if [ -z $1 ]; then
-  gum log --level fatal You need to pass on the relationship name of the database to dump
+  gum log --level fatal "You need to pass on the relationship name of the database to dump (the one on .platform.app.yaml)!"
 fi
 relationship_name=$1
 
-gum log --level info Dumping all databases from $relationship_name...
+gum log --level info Dumping all databases from $relationship_name on $(platform environment:info id)...
 platform ssh "\
   MYSQL_PWD=\$(echo \$PLATFORM_RELATIONSHIPS | base64 -d | jq -r \".${relationship_name}[0].password\") \
   mysqldump \
