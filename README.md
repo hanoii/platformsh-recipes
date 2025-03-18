@@ -11,6 +11,8 @@ A collection of scripts, commands, recipes and notes for platform.sh
   * [Tools](#tools)
   * [`.environment`](#environment)
   * [`.bashrc`](#bashrc)
+- [Helper functionality](#helper-functionality)
+  * [Update database to a different version](#update-database-to-a-different-version)
 - [Performance troubleshooting](#performance-troubleshooting)
   * [Automatic IP Blocking](#automatic-ip-blocking)
   * [ahoy commands](#ahoy-commands)
@@ -120,6 +122,56 @@ Finally, it also requires things to be added to a project's own .bashrc. If you
 haven't used the `-f` version of the installer, you can take what you want from
 [this repo's .bashrc](platformsh-recipes/assets/platformsh/.bashrc).
 
+## Helper functionality
+
+### Update database to a different version
+
+While normally you can just bump up the version and expect everything to work, I
+sometimes feel that it's safer to start afresh with an empty database container
+restore a previously taken database dump. Depending on the need you can do this
+in two ways:
+
+1. If you have the storage, create a new service name, dump the old service and
+   restore it on the new, and then point the original relationship to the new
+   service.
+2. Take a temporary database dump, push a new service with the new version which
+   would break your site until you restore the dump to it.
+
+Both are valid, the first one better than the second one but more often than not
+databas is big and you don't have the storage to double the database and
+Platform.sh storage is not particularly cheap, so it's a matter of deciding
+what's best to do on each case.
+
+If you want to follow the second option, this add-on and it's
+[Platform.sh's companion](#platformsh-setup) which must be fully setup, comes
+with a helper set of commands that allows you to set a flag so that Platform.sh
+responds with a 503 very early to let search-engines and users know there's a
+maintenance going on, something that's not natively supported. So you can do the
+following:
+
+<!-- prettier-ignore -->
+> [!WARN]
+> All of these commands run against the remote environment of the current branch.
+
+- `ddev ahoy platform maintenance503:dbdump <RELATIONSHIP>`: Take a database
+  dump on the remote environment matching your current branch. `<RELATIONSHIP>`
+  is the name of your database relationship in your app's `.platform.app.yml`.
+- `ddev ahoy platform backup:create`: Take a manual backup just in case.
+- `ddev ahoy platform maintenance503:set`: Set's a Platform.sh's variable that
+  make your site respond with a 503 and stop accepting traffic.
+- Always a good practice to try this on ddev first by updating the database
+  version and downloading the remote db and make sure all works properly.
+- Update your `.platform/services.yaml` file and change both the service name
+  and the new database version. Update your `.platform.app.yaml` file and point
+  your database `<RELATIONSHIP>` to the new database service.
+- `ddev ahoy platform maintenance503:dbrestore <RELATIONSHIP>`: Restore the
+  database dump taken in the first step to the new service.
+- `ddev ahoy platform maintenance503:clear`: Clear the Platform.sh variable so
+  that the site can start accepting HTTP traffic again. After this ocmmand
+  finishes, site should be back live as normal.
+- `ddev ahoy platform maintenance503:dbdump:clear`: Removes the dump on the
+  remote taken by the above command.
+
 ## Performance troubleshooting
 
 The commands here can also be used to test and access platform projects locally,
@@ -150,7 +202,7 @@ As an exampe and a starting point, this is a real configuration that is in use:
 <!-- prettier-ignore -->
 ```yml
     env:
-        # Both blacklist and whitelist are Perl regex patterns used in the 
+        # Both blacklist and whitelist are Perl regex patterns used in the
         # automatic IP blocking process.
         # The whitelist patterns are filtered out first before, and then the
         # blacklist patterns are used to find missbehaving IPs

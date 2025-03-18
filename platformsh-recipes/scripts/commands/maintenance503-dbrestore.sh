@@ -7,7 +7,7 @@ if [ -z $1 ]; then
 fi
 relationship_name=$1
 
-gum log --level info Restoring all databases to $relationship_name...
+gum log --level info Restoring all databases to $relationship_name on $(platform environment:info id)...
 platform ssh "\
   MYSQL_PWD=\$(echo \$PLATFORM_RELATIONSHIPS | base64 -d | jq -r \".${relationship_name}[0].password\") \
   screen \
