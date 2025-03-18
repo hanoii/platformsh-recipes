@@ -4,7 +4,6 @@
 fish_add_path /usr/games
 
 # fzf
-fish_add_path /opt/fzf/bin
 function fish_user_key_bindings
   fzf --fish | source
 end
@@ -56,3 +55,12 @@ end
 function ll --wraps eza --description "eza -la --icons --octal-permissions --group-directories-first"
     eza -la --icons --octal-permissions --group-directories-first $argv
 end
+
+# rust
+source ~/.cargo/env.fish
+
+# delta
+git config --global core.pager delta
+git config --global interactive.diffFilter 'delta --color-only'
+git config --global delta.navigate true
+git config --global merge.conflictStyle zdiff3

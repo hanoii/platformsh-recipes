@@ -189,7 +189,7 @@ wget -q "https://github.com/kovidgoyal/kitty/raw/refs/heads/master/terminfo/x/xt
 
 # Install fzf
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing fzf...\033[0m"
-wget -q https://github.com/junegunn/fzf/releases/download/v0.56.3/fzf-0.56.3-linux_amd64.tar.gz -O - | tar -zx -C $PLATFORM_APP_DIR/.global/bin
+wget -q https://github.com/junegunn/fzf/releases/download/v0.60.3/fzf-0.60.3-linux_amd64.tar.gz -O - | tar -zx -C $PLATFORM_APP_DIR/.global/bin
 
 # Install platform cli
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing platform cli...\033[0m"
@@ -200,4 +200,4 @@ fi
 
 # Install ahoy
 echo -e "\033[0;36m[$(date -u "+%Y-%m-%d %T.%3N")] Installing ahoy...\033[0m"
-wget -q https://github.com/ahoy-cli/ahoy/releases/download/v2.2.0/ahoy-bin-linux-amd64 -O $PLATFORM_APP_DIR/.global/bin/ahoy && chmod +x $PLATFORM_APP_DIR/.global/bin/ahoy
+wget -q https://github.com/ahoy-cli/ahoy/releases/download/v2.4.0/ahoy-bin-linux-amd64 -O $PLATFORM_APP_DIR/.global/bin/ahoy && chmod +x $PLATFORM_APP_DIR/.global/bin/ahoy
