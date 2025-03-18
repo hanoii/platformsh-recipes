@@ -150,7 +150,7 @@ maintenance going on, something that's not natively supported. So you can do the
 following:
 
 <!-- prettier-ignore -->
-> [!WARN]
+> [!WARNING]
 > All of these commands run against the remote environment of the current branch.
 
 - `ddev ahoy platform maintenance503:dbdump <RELATIONSHIP>`: Take a database
