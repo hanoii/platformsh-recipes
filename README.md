@@ -156,7 +156,7 @@ following:
 - `ddev ahoy platform maintenance503:dbdump <RELATIONSHIP>`: Take a database
   dump on the remote environment matching your current branch. `<RELATIONSHIP>`
   is the name of your database relationship in your app's `.platform.app.yml`.
-- `ddev ahoy platform backup:create`: Take a manual backup just in case.
+- `ddev platform backup:create`: Take a manual backup just in case.
 - `ddev ahoy platform maintenance503:set`: Set's a Platform.sh's variable that
   make your site respond with a 503 and stop accepting traffic.
 - Always a good practice to try this on ddev first by updating the database
