@@ -179,7 +179,7 @@ platformsh_recipes_cr_preset_drupal_composer() {
       composer global require composer/composer:^2
       export PATH=$(composer global config bin-dir --absolute --quiet):$PATH
     fi
-    composer install --no-interaction --no-dev
+    composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
     local composer_dirs=$(ls -d vendor/ web/core web/modules/contrib web/libraries web/themes/contrib web/profiles/contrib drush/Commands/contrib 2>/dev/null)
     local composer_drupal_extra=$(find web/ -type f -newermt $date -not -path 'web/core*' -not -path 'web/modules/contrib*' -not -path 'web/libraries*' -not -path 'web/themes/contrib*' -not -path 'web/profiles/contrib*')
     platformsh_recipes_cr_cache_store "composer" $composer_dirs $composer_drupal_extra
