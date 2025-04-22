@@ -141,6 +141,9 @@ function install_debian() {
         inetutils-telnet)
           pkg_url="https://snapshot.debian.org/archive/debian-security/20200824T085329Z/pool/updates/main/i/inetutils/inetutils-telnet_1.9.4-2%2Bdeb9u1_$arch.deb"
           ;;
+        smem)
+          pkg_url="https://snapshot.debian.org/archive/debian/20141006T161542Z/pool/main/s/smem/smem_1.4-2_all.deb"
+          ;;
       esac
     fi
 
@@ -178,6 +181,7 @@ if [ "$VERSION_ID" -le "10" ]; then
 else
   install_debian bsdextrautils
 fi
+install_debian smem
 
 # screen tweaks
 cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc ~/.screenrc
