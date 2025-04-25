@@ -86,7 +86,7 @@ commit sha of the repo for `PLATFORMSH_RECIPES_VERSION`**) :
 ```yml
 hooks:
   build: |
-    source /dev/stdin  <<< "$(curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/installer.sh")"
+    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/installer.sh" | bash -s
 ```
 
 If you wish to automatically install and setup most of what this repo provides,
@@ -95,7 +95,7 @@ you can append `-f` to the `installer.sh` script above:
 ```yml
 hooks:
   build: |
-    source /dev/stdin  <<< "$(curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/installer.sh")" -f
+    curl -fsSL "https://raw.githubusercontent.com/hanoii/platformsh-recipes/${PLATFORMSH_RECIPES_VERSION}/installer.sh" | bash -s -- -f
 ```
 
 ### Tools
