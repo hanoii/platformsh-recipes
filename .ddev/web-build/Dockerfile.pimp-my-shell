@@ -9,7 +9,7 @@ RUN set -eux; \
 
 # fzf et al
 RUN set -eux; \
-    FZF_VERSION=0.61.2; \
+    FZF_VERSION=0.61.3; \
     AARCH=$(dpkg --print-architecture); \
     wget -q https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${AARCH}.tar.gz -O - | tar -zxf - -C /usr/local/bin; \
     \
@@ -56,17 +56,24 @@ RUN set -eux; \
     rm gum.deb;
 
 # fish
-RUN set -eux; \
-    FISH_VERSION=4.0.2-2; \
-    DEBIAN=$(lsb_release -rs); \
-    AARCH=$(dpkg --print-architecture); \
-    wget -q https://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_${DEBIAN}/${AARCH}/fish_${FISH_VERSION}_${AARCH}.deb -O fish.deb ; \
-    dpkg -i fish.deb; \
-    rm fish.deb;
+#
+# Opensuse doesn't keep older files of the fish build, so this will always use
+# the latest regardless of the fish version specified below in the
+# `apt satisfy` command. However, this allows for proper docker build cache
+# busting ensuring you always have the last version when it's updated.
+RUN <<EOF
+set -eux;
+FISH_VERSION=4.0.2-2; \
+DEBIAN=$(lsb_release -rs);
+echo "deb http://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_${DEBIAN}/ /" | sudo tee /etc/apt/sources.list.d/shells:fish:release:4.list
+curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:4/Debian_${DEBIAN}/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_4.gpg > /dev/null
+apt update
+apt satisfy -y "fish (>=${FISH_VERSION})"
+EOF
 
 # eza
 RUN set -eux; \
-    EZA_VERSION=0.21.1; \
+    EZA_VERSION=0.21.2; \
     wget -q https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/eza_`uname -m`-unknown-linux-gnu.tar.gz -O- | tar -zxf - -C /usr/local/bin; \
     wget https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/completions-${EZA_VERSION}.tar.gz -O eza-completions.tar.gz; \
     tar -xzf eza-completions.tar.gz --strip-components=3 -C /etc/bash_completion.d/ ./target/completions-${EZA_VERSION}/eza; \
@@ -169,6 +176,6 @@ RUN set -eux; \
 
 # gh
 RUN set -eux; \
-    GH_VERSION=2.70.0; \
+    GH_VERSION=2.71.2; \
     AARCH=$(dpkg --print-architecture); \
     wget -q https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_${AARCH}.tar.gz -O- | tar -zxf - --strip-components=1 -C /usr/local --wildcards '*/bin/gh' ;
