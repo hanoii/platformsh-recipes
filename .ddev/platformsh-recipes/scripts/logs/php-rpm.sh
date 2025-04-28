@@ -10,9 +10,23 @@ date2=$(php -r "print gmdate('^Y-m-d\TH', strtotime('-1 hours'));")
 date3=$(php -r "print gmdate('^Y-m-d\TH', strtotime('-2 hours'));")
 grep_date='| grep -a -E "'"$date1|$date2|$date3"'"'
 grep_extra=""
+
+# $1  date
+# $2  HTTP Method
+# $3  HTTP Status
+# $4  Milisconds
+# $5  "ms"
+# $6  RAM
+# $7  "kb"
+# $8  CPU%
+# $9  URI path
+# $10 URI query string
+# $11 IP
+# $12 HTTP Host
+# #13 User-Agent
 perl_start='| perl -pe "s/'
 perl_date='(^\d*[^:]*:[^:]*).*?'
-perl_other=' (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*)/'
+perl_other=' (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\/[^\s\?]+)(?:(\?[^\s]+))?(?:$| --v1-- (\S+) (\S+) (.*)|.*)/'
 perl_show='\$1'
 perl_end='/"'
 pipe_extra=
@@ -49,7 +63,7 @@ while true ; do
           shift 2 ;;
       esac ;;
     --ip)
-      perl_show='\$1 - \$2'
+      perl_show='\$1 - \$11'
       case "$2" in
         "") shift 2 ;;
         *)
@@ -70,10 +84,14 @@ while true ; do
   esac
 done
 
-cmd='cat /var/log/php.access.log '"$grep_date"' '"$grep_extra"' '"$pipe_extra"' '"$grep_before"' '"$perl_start$perl_date$perl_other$perl_show$perl_end"' '"$grep_after"' | sort | uniq -c'
+PHP_ACCESS_LOG_FILEPATH="/var/log/php.access.log"
+if [ -n "$PLATFORMSH_RECIPES_DEV" ]; then
+  PHP_ACCESS_LOG_FILEPATH="php.access.log"
+fi
+cmd='cat '"$PHP_ACCESS_LOG_FILEPATH"' '"$grep_date"' '"$grep_extra"' '"$pipe_extra"' '"$grep_before"' '"$perl_start$perl_date$perl_other$perl_show$perl_end"' '"$grep_after"' | sort | uniq -c'
 awk='awk '"'"'{sum += $1; print} END {print "\033[1;35m\n>>", sum, "total <<\n\033[0m" > "/dev/stderr"}'"'"
 >&2 printf "\033[0;36mRunning [ %s | %s ]...\033[0m\n" "$cmd" "$awk"
-if [ -z "$PLATFORM_APPLICATION_NAME" ]; then
+if [ -z "$PLATFORM_APPLICATION_NAME" -a -z "$PLATFORMSH_RECIPES_DEV" ]; then
   platform ssh -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} "$cmd" | eval $awk
 else
   eval $cmd | eval $awk
