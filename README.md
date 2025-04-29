@@ -14,6 +14,7 @@ A collection of scripts, commands, recipes and notes for platform.sh
 - [Helper functionality](#helper-functionality)
   * [Update database to a different version](#update-database-to-a-different-version)
 - [Performance troubleshooting](#performance-troubleshooting)
+  * [Avoid unnecessary pass-thrus to your PHP application](#avoid-unnecessary-pass-thrus-to-your-php-application)
   * [Automatic IP Blocking](#automatic-ip-blocking)
   * [ahoy commands](#ahoy-commands)
   * [Time/memory used](#timememory-used)
@@ -42,9 +43,14 @@ It installs most of the locally necesary scripts to run against platform.
 
 ### `.platform.app.yaml` tweaks
 
-For the php logs commands, we need to alter php.access.log format so that in
-includes more data, to do that add/amend the following on your
-`.platform.app.yml`:
+To take advantage of most of the php log commands, we need to alter php.
+access.log format so that in includes more data, to do that add/amend the
+following on your `.platform.app.yml`:
+
+<!-- prettier-ignore -->
+> [!Note]
+> php.access.log commands works with original ones too, only that options that
+> relates to IP, Host and User Agent will not work unless they are present.
 
 ```yml
 web:
@@ -68,7 +74,7 @@ section:
 ```yml
 variables:
   ...
-  PLATFORMSH_RECIPES_VERSION: 6be82fe
+  PLATFORMSH_RECIPES_VERSION: 74ea14782ee04bda12c0e92e35540076b1784451
 
 ```
 
@@ -181,7 +187,102 @@ to do that you need to make available the following environment variables:
 - `PLATFORM_PROJECT`
 - `PLATFORMSH_RECIPES_MAIN_BRANCH=main` (optional, defaults to `master`)
 
+### Avoid unnecessary pass-thrus to your PHP application
+
+After analyzing many logs and situation, a lot of unnecesarry traffic was caught
+handled by PHP (Drupal most of the time for me), and this can be avoided with
+some better rules inside your `web` entroy in your `.platform.app.yaml` file.
+
+Here's a collection of some of those that you can use and take ideas from:
+
+```yaml
+web:
+  commands:
+    pre_start: $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/php-pre-start.sh
+    start: /usr/bin/start-php-app -y "$PLATFORM_APP_DIR/.deploy/php-fpm.conf"
+  locations:
+    "/":
+      ##
+      # A lot of other configuration entries were removed for this example
+      ###
+      passthru: "/index.php"
+      # Deny access to all static files, except those specifically allowed below.
+      allow: false
+      # Rules for specific URI patterns.
+      rules:
+        # Allow access to common static files.
+        '\.(jpe?g|png|gif|svgz?|css|js|map|ico|bmp|eot|woff2?|otf|ttf)$':
+          allow: true
+        '^/robots\.txt$':
+          allow: true
+        '^/sitemap\.xml$':
+          allow: true
+
+        # Deny direct access to configuration files.
+        '^/sites/sites\.php$':
+          scripts: false
+        '^/sites/[^/]+/settings.*?\.php$':
+          scripts: false
+
+        # Allow robots.txt but block all other .txt files
+        '^/robots\.txt$':
+            allow: true
+        '(?<!^/robots)\.txt$':
+            allow: false
+            passthru: false
+            scripts: false
+
+        # Allow sitemap.xml but block all other .xml files
+        '^/sitemap.xml$':
+            allow: true
+        '(?<!^/sitemap)\.xml$':
+            allow: false
+            passthru: false
+            scripts: false
+
+        # Deny common wordpress paths to avoid having php handling these as 404
+        "^/wp-":
+          passthru: false
+          scripts: false
+        "^/wordpress":
+          passthru: false
+          scripts: false
+
+        # Deny other script files
+        '\.(aspx?|php7|PhP7)$':
+          passthru: false
+          scripts: false
+
+        # Deny passthru on any php file but /index.php
+        '(?<!^/index)\.php$':
+          passthru: false
+          scripts: false
+
+        # deny every starting dot file and directory
+        '/\..*':
+          allow: false
+          passthru: false
+          scripts: false
+```
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> Platform.sh rules regex doesn't work against query string. A technique I have
+> used to block certain patterns from even bootstrapping Drupal is to have an
+> [auto prepend][php-auto-prepend] a php file doing this blocking or adding some
+> logic very early on yoru application bootstrapping
+> (i.e. [`settings.php` in Drupal][settings-php-block])
+
+[php-auto-prepend]:
+  https://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file
+
 ### Automatic IP Blocking
+
+<!-- prettier-ignore -->
+> [!CAUTION]
+> If you have a lot of IP blocks through Platform.sh' ssh access it will slow
+> down building and enabling the environment a lot. We found this by noting an
+> increasing amount of times doing this and they reported this was the case.
 
 This ships with a [script](platformsh-recipes/scripts/logs/ipblock.sh) that can
 be configured to search for certain patterns on the access.log and, if run
