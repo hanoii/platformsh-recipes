@@ -2,7 +2,7 @@
 #ddev-generated
 set -e
 
-OPTIONS=`getopt -o '' -l uri:,not-404,404,days:,all,mem,include-ip,include-host,include-ua -- "$@"`
+OPTIONS=`getopt -o '' -l exact,uri:,path:,not-404,404,days:,all,mem,include-ip,include-host,include-ua,include-uri -- "$@"`
 eval set -- "$OPTIONS"
 
 time=now
@@ -23,20 +23,37 @@ grep_extra=''
 # $11 IP
 # $12 HTTP Host
 # #13 User-Agent
-perl_start='| perl -pe "s/(^\d*[^:]*:[^:]*.*?) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\/[^\s\?]+)(?:(\?[^\s]+))?(?:$| --v1-- (\S+) (\S+) (.*)|.*)/'
+perl_start='| perl -pe "s/(^\d*[^:]*:[^:]*.*?) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) ([^\s\?]+)(?:(\?[^\s]+))?(?:$| --v1-- (\S+) (\S+) (.*)|.*)/'
 perl_show='\$4\$5 \$6\$7'
 perl_other=' \$2 \$9\$10 -> [\$2] \$3'
 perl_end='/"'
 
 pipe_extra=
+
+exact=
+cmd_exact=
+
 # extract options and their arguments into variables.
 while true ; do
   case "$1" in
+    --exact)
+      exact=" || "
+      cmd_exact="| perl -pe 's/ \|\| //g'"
+      shift ;;
     --uri)
       case "$2" in
         "") shift 2 ;;
         *)
-          grep_extra="| grep -a '$2'"
+          perl_other=' \$2 '$exact'\$9\$10'$exact' -> [\$2] \$3'
+          grep_after="| grep -a '$exact$2$exact'"
+          shift 2 ;;
+        esac ;;
+    --path)
+      case "$2" in
+        "") shift 2 ;;
+        *)
+          perl_other=' \$2 '$exact'\$9'$exact' -> [\$2] \$3'
+          grep_after="| grep -a '$exact$2$exact'"
           shift 2 ;;
         esac ;;
     --ip)
@@ -70,6 +87,8 @@ while true ; do
       perl_other="$perl_other \\\$12" ; shift ;;
     --include-ua)
       perl_other="$perl_other \\\$13" ; shift ;;
+    --include-uri)
+      perl_other="$perl_other -- \\\$9\\\$10" ; shift ;;
     --all)
       grep_date='' ; shift ;;
     --all)
@@ -83,7 +102,7 @@ PHP_ACCESS_LOG_FILEPATH="/var/log/php.access.log"
 if [ -n "$PLATFORMSH_RECIPES_DEV" ]; then
   PHP_ACCESS_LOG_FILEPATH="php.access.log"
 fi
-cmd='cat '"$PHP_ACCESS_LOG_FILEPATH"' '"$grep_date"' '"$grep_extra"' '"$pipe_extra"' '"$perl_start$perl_show$perl_other$perl_end"' | sort -n'
+cmd='cat '"$PHP_ACCESS_LOG_FILEPATH"' '"$grep_date"' '"$grep_extra"' '"$pipe_extra"' '"$perl_start$perl_show$perl_other$perl_end"' '"$grep_after"' '"$cmd_exact"' | sort -n'
 >&2 printf "\033[0;36mRunning [ %s ]...\033[0m\n" "$cmd"
 if [ -z "$PLATFORM_APPLICATION_NAME" -a -z "$PLATFORMSH_RECIPES_DEV" ]; then
   platform ssh -e ${PLATFORMSH_RECIPES_MAIN_BRANCH-master} "$cmd"

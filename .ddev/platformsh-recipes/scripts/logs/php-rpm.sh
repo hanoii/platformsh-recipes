@@ -26,7 +26,7 @@ grep_extra=""
 # #13 User-Agent
 perl_start='| perl -pe "s/'
 perl_date='(^\d*[^:]*:[^:]*).*?'
-perl_other=' (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\/[^\s\?]+)(?:(\?[^\s]+))?(?:$| --v1-- (\S+) (\S+) (.*)|.*)/'
+perl_other=' (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) ([^\s\?]+)(?:(\?[^\s]+))?(?:$| --v1-- (\S+) (\S+) (.*)|.*)/'
 perl_show='\$1'
 perl_end='/"'
 pipe_extra=

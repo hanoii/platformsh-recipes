@@ -3,7 +3,7 @@ repository: .
 version: ""
 dependencies:
     - pimp-my-shell
-install_date: "2025-04-28T19:23:05-03:00"
+install_date: "2025-04-29T09:29:31-03:00"
 project_files:
     - platformsh-recipes/assets/drupal
     - platformsh-recipes/scripts
