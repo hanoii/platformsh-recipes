@@ -225,7 +225,7 @@ platformsh_recipes_cr_deploy_preset_drupal() {
   fi
 
   if [[ $cr -eq 1 ]]; then
-    echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Clearing caches a second time...\033[0m"
+    echo -e "\033[0;34m[$(date -u "+%Y-%m-%d %T.%3N")] Clearing caches...\033[0m"
     drush -y cache:rebuild
     echo -e "\033[0;32m[$(date -u "+%Y-%m-%d %T.%3N")] [success] Caches cleared!\033[0m"
   else
