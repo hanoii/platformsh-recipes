@@ -9,11 +9,11 @@ RUN set -eux; \
 
 # fzf et al
 RUN set -eux; \
-    FZF_VERSION=0.61.3; \
+    FZF_VERSION=0.62.0; \
     AARCH=$(dpkg --print-architecture); \
     wget -q https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${AARCH}.tar.gz -O - | tar -zxf - -C /usr/local/bin; \
     \
-    FZFGIT_SHA1=6651e719da630cd8e6e00191af7f225f6d13a801; \
+    FZFGIT_SHA1=3ec3e97d1cc75ec97c0ab923ed5aa567aee01a5e; \
     mkdir -p /opt/fzf-git.sh; \
     cd /opt/fzf-git.sh; \
     git init; \
@@ -39,18 +39,18 @@ RUN set -eux; \
 
 # z.lua
 RUN set -eux; \
-    ZLUA_VERSION=1.8.20; \
+    ZLUA_VERSION=1.8.24; \
     mkdir -p /opt/z.lua; \
     wget https://github.com/skywind3000/z.lua/archive/refs/tags/${ZLUA_VERSION}.zip -qO- | bsdtar xf - --strip-components=1 -C /opt/z.lua
 
 # starship
 RUN set -eux; \
-    STARSHIP_VERSION=1.22.1; \
+    STARSHIP_VERSION=1.23.0; \
     curl -sS https://starship.rs/install.sh | sh -s -- -y -v v${STARSHIP_VERSION}
 
 # gum
 RUN set -eux; \
-    GUM_VERSION=0.16.0; \
+    GUM_VERSION=0.16.1; \
     wget -q https://github.com/charmbracelet/gum/releases/download/v${GUM_VERSION}/gum_${GUM_VERSION}_`dpkg --print-architecture`.deb -O gum.deb; \
     dpkg -i gum.deb; \
     rm gum.deb;
@@ -62,9 +62,9 @@ RUN set -eux; \
 # `apt satisfy` command. However, this allows for proper docker build cache
 # busting ensuring you always have the last version when it's updated.
 RUN <<EOF
-set -eux;
-FISH_VERSION=4.0.2-2; \
-DEBIAN=$(lsb_release -rs);
+set -eux
+FISH_VERSION=4.0.2-2
+DEBIAN=$(lsb_release -rs)
 echo "deb http://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_${DEBIAN}/ /" | sudo tee /etc/apt/sources.list.d/shells:fish:release:4.list
 curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:4/Debian_${DEBIAN}/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_4.gpg > /dev/null
 apt update
@@ -73,7 +73,7 @@ EOF
 
 # eza
 RUN set -eux; \
-    EZA_VERSION=0.21.2; \
+    EZA_VERSION=0.21.4; \
     wget -q https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/eza_`uname -m`-unknown-linux-gnu.tar.gz -O- | tar -zxf - -C /usr/local/bin; \
     wget https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/completions-${EZA_VERSION}.tar.gz -O eza-completions.tar.gz; \
     tar -xzf eza-completions.tar.gz --strip-components=3 -C /etc/bash_completion.d/ ./target/completions-${EZA_VERSION}/eza; \
@@ -82,7 +82,7 @@ RUN set -eux; \
 
 # go
 RUN set -eux; \
-    GO_VERSION=1.24.2; \
+    GO_VERSION=1.24.4; \
     AARCH=$(dpkg --print-architecture); \
     wget -q https://go.dev/dl/go${GO_VERSION}.linux-${AARCH}.tar.gz -O go.tar.gz; \
     tar -C /usr/local -xzf go.tar.gz; \
@@ -107,7 +107,7 @@ RUN set -eux; \
 
 # bun.sh - it's installed by on the user as it adds stuff to .bashrc
 RUN set -eux; \
-    BUN_VERSION=1.2.10; \
+    BUN_VERSION=1.2.16; \
     curl -fsSL https://bun.sh/install | bash -s "bun-v${BUN_VERSION}"
 
 # go tools - it's installed on the user so so that bin and pkgs are available on the user's home
@@ -119,19 +119,19 @@ RUN set -eux; \
 RUN set -eux; \
     unset GOARCH; \
     unset GOOS; \
-    RECUR_VERSION=2.0.4; \
+    RECUR_VERSION=2.3.0; \
     /usr/local/go/bin/go install dbohdan.com/recur/v2@v${RECUR_VERSION};
 
 RUN set -eux; \
-    RUST_VERSION=1.86.0; \
-    curl -sSf https://sh.rustup.rs/ | sh -s -- --default-toolchain=${RUST_VERSION} -y
+    RUST_VERSION=1.87.0; \
+    curl -sSf https://sh.rustup.rs/ | sh -s -- --profile minimal --default-toolchain=${RUST_VERSION} -y
 
 # Go back to root
 USER root:root
 
 # spacer
 RUN set -eux; \
-    SPACER_VERSION=0.3.8; \
+    SPACER_VERSION=0.3.9; \
     AARCH=$(uname -m); \
     wget -q https://github.com/samwho/spacer/releases/download/v${SPACER_VERSION}/spacer-${AARCH}-unknown-linux-gnu.tar.gz -O- | tar -zxf - -C /usr/local/bin;
 
@@ -143,7 +143,7 @@ RUN set -eux; \
 
 # kitty-terminfo from directoy from their GitHub repo @ master
 RUN set -eux; \
-    KITTY_VERSION=0.41.1; \
+    KITTY_VERSION=0.42.1; \
     url="https://github.com/kovidgoyal/kitty/raw/refs/tags/v${KITTY_VERSION}/terminfo/x/xterm-kitty"; \
     mkdir -p /usr/share/terminfo/x; \
     cd /usr/share/terminfo/x; \
@@ -157,18 +157,20 @@ RUN set -eux; \
 # https://chrisbuilds.github.io/terminaltexteffects/
 RUN set -eux; \
     TTE_VERSION=0.12.0; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends pipx; \
     PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx install terminaltexteffects==${TTE_VERSION}
 
 # lazygit
 RUN set -eux; \
-    LAZYGIT_VERSION=0.49.0; \
+    LAZYGIT_VERSION=0.52.0; \
     AARCH=$(dpkg --print-architecture); \
     AARCH=${AARCH/amd64/x86_64}; \
     wget -q https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${AARCH}.tar.gz -O- | tar -zxf - -C /usr/local/bin;
 
 # ov
 RUN set -eux; \
-    OV_VERSION=0.40.1; \
+    OV_VERSION=0.41.0; \
     AARCH=$(dpkg --print-architecture); \
     wget -q https://github.com/noborus/ov/releases/download/v${OV_VERSION}/ov_${OV_VERSION}_linux_${AARCH}.zip -O ov.zip; \
     unzip ov.zip -d /usr/local/bin/ ov; \
@@ -176,6 +178,6 @@ RUN set -eux; \
 
 # gh
 RUN set -eux; \
-    GH_VERSION=2.71.2; \
+    GH_VERSION=2.74.1; \
     AARCH=$(dpkg --print-architecture); \
     wget -q https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_${AARCH}.tar.gz -O- | tar -zxf - --strip-components=1 -C /usr/local --wildcards '*/bin/gh' ;
