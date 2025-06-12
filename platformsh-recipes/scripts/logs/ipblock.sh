@@ -82,7 +82,7 @@ cmd_str="ahoy platform log:access $days $cmd_ip --extra '${cmd_extra//\'/\'\"\'\
 ips=$(eval $cmd_str 2> /tmp/platformsh-recipes.ipblock.stderr)
 >&2 echo $(</tmp/platformsh-recipes.ipblock.stderr)
 
-cmd_str="ahoy platform log:php:rpm $days $cmd_ip --per-second --greater-than 50 --ips-only --all | awk '{ print \"1000000\", \$0 }'"
+cmd_str="ahoy platform log:php:rpm $days $cmd_ip --per-second --greater-than 50 --ips-only | awk '{ print \"1000000\", \$0 }'"
 >&2 echo -e "\033[0;36mRunning [ $cmd_str ]...\033[0m"
 ips2=$(eval $cmd_str 2> /tmp/platformsh-recipes.ipblock.stderr)
 >&2 echo $(</tmp/platformsh-recipes.ipblock.stderr)
