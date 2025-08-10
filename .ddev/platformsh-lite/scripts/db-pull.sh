@@ -11,6 +11,7 @@ Usage: ${DDEV_PLATFORMSH_LITE_HELP_CMD-$0} [options]
   -e ENVIRONMENT    Use a different environment to download/import database.
   -n                Do not download, expect the dump to be already downloaded.
   -o                Import only, do not run post-import-db hooks.
+  -d                Download only, do not import or run post-import-db hooks.
 EOM
 )
 
@@ -77,8 +78,9 @@ relationship_scheme=${relationship_array[1]}
 cmd_environment="-e $environment"
 download=true
 post_import=true
+download_only=false
 
-while getopts ":hne:or" option; do
+while getopts ":hne:ord" option; do
   case ${option} in
     h)
       ;;
@@ -91,6 +93,9 @@ while getopts ":hne:or" option; do
       ;;
     o)
       post_import=
+      ;;
+    d)
+      download_only=true
       ;;
     r)
       ;;
@@ -153,6 +158,11 @@ else
     gum log --level error "Dump ${filename} not found. Please run it without -n."
     exit 3
   fi
+fi
+
+if [[ "$download_only" == "true" ]]; then
+  gum log --level info "Download completed. Skipping import and post-import hooks."
+  exit 0
 fi
 
 # Here we use the mysql database otherwise mysql alone will

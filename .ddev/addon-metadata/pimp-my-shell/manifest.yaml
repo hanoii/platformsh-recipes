@@ -1,7 +1,7 @@
 name: pimp-my-shell
 repository: https://github.com/hanoii/ddev-pimp-my-shell/tarball/main
 version: ""
-install_date: "2025-06-12T19:53:06-03:00"
+install_date: "2025-08-10T15:01:12-03:00"
 project_files:
     - web-build/prepend.Dockerfile.pimp-my-shell
     - web-build/1.24.4-Dockerfile.pimp-my-shell

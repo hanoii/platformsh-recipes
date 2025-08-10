@@ -1,13 +1,14 @@
 name: platformsh-lite
 repository: https://github.com/hanoii/ddev-platformsh-lite/tarball/main
 version: ""
-install_date: "2024-10-03T09:11:03-03:00"
+install_date: "2025-08-10T15:01:33-03:00"
 project_files:
     - config.platformsh-lite.yaml
     - docker-compose.platformsh-lite.yaml
     - platformsh-lite/.gitignore
     - platformsh-lite/.ahoy.platformsh-lite.yml
     - platformsh-lite/.ahoy.ifnotpresent.yml
+    - platformsh-lite/scripts/activities.sh
     - platformsh-lite/scripts/check-platformsh-cli-token.sh
     - platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
     - platformsh-lite/scripts/db-pull.sh

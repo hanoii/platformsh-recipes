@@ -4,6 +4,7 @@ commands:
   storage:
     usage: "See plan storage usage across apps and services."
     cmd: |
+      set -e
       .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
       DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform storage}" .ddev/platformsh-lite/scripts/storage.sh "$@"
 
@@ -15,11 +16,18 @@ commands:
       DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform push:log}" .ddev/platformsh-lite/scripts/push-log.sh "$@"
 
   db:pull:
-    usage: "Pull database from the production environment."
+    usage: "Pull database from the production environment with auto-detection of defaults and useful interactions."
     cmd: |
       set -e
       .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
       DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform db:pull}" .ddev/platformsh-lite/scripts/db-pull.sh "$@"
+
+  db:pull:lite:
+    usage: "Pull database from the production environment. A basic command that only does the download."
+    cmd: |
+      set -e
+      .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
+      DDEV_PLATFORMSH_LITE_HELP_CMD="${DDEV_PLATFORMSH_LITE_HELP_CMD-ahoy platform db:pull:lite}" .ddev/platformsh-lite/scripts/db-pull-lite.sh "$@"
 
   switch:
     usage: "Select a different project to run 'platform' commands against"
@@ -27,3 +35,10 @@ commands:
       set -e
       .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
       .ddev/platformsh-lite/scripts/switch.sh
+
+  activities:
+    usage: "Choose activities to log (excluding cron/backups)"
+    cmd: |
+      set -e
+      .ddev/platformsh-lite/scripts/check-valid-platformsh-cli-token.sh
+      .ddev/platformsh-lite/scripts/activities.sh "$@"

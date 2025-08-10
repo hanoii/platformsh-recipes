@@ -44,3 +44,38 @@ if [ ! -z "$PLATFORMSH_CLI_TOKEN" ]; then
 else
   gum log --level=warn PLATFORMSH_CLI_TOKEN is empty, the usual platform post-start commands have not run.
 fi
+
+# Special ssh config
+# - It removes the Platform.sh' SSH key/certificate from the agent before everything else
+# - It adds the Platform.sh' SSH key/certificate to the agent after
+# - It forward agent keys through ssh for platform.sh domains
+#
+# This is to make sure that any new certificate gets added (if refreshed) and to
+# avoid leaving lingering certificates in the ddev ssh-agent.
+
+mkdir -p ~/.ssh/config.platformsh-lite.d
+mkdir -p ~/.ssh/config.platformsh-lite.pre.d
+
+# Add includes from config.platformsh-lite.pre.d/* on top of ~/.ssh/config
+sed -i "1s@^@# Added by ddev-platformsh-lite add-on on $(date -u "+%Y-%m-%d %H:%m") \nInclude \"config.platformsh-lite.pre.d/*\"\n\n@" ~/.ssh/config
+# Add includes from config.platformsh-lite.d/* to the end of ~/.ssh/config
+echo -e "\n# Added by ddev-platformsh-lite add-on on $(date -u "+%Y-%m-%d %H:%m") \nInclude \"config.platformsh-lite.d/*\"" >> ~/.ssh/config
+
+# Remove key/cert
+cat <<'SSH_CONFIG' > ~/.ssh/config.platformsh-lite.pre.d/config
+Match host "*.platform.sh" exec "ssh-add -L | grep -F 'platformsh-cli-temporary-cert' | ssh-add -d - > /dev/null 2>&1"
+Host *
+SSH_CONFIG
+
+# Add key/cert to the agent
+cat <<'SSH_CONFIG' > ~/.ssh/config.platformsh-lite.d/config
+Match host "*.platform.sh" exec "ssh-add ~/.platformsh/.session/sess-cli-default/ssh/id_ed25519 > /dev/null 2>&1"
+Host *
+SSH_CONFIG
+
+# Optionally set ForwardAgent=yes to all ssh connections to *.platform.sh hostnames
+[ -n "$DDEV_PLATFORMSH_LITE_SSH_FORWARDAGENT" ] && cat <<'SSH_CONFIG' >> ~/.ssh/config.platformsh-lite.d/config || true
+Host *.platform.sh
+  ForwardAgent yes
+Host *
+SSH_CONFIG
