@@ -84,8 +84,10 @@ platformsh_recipes_cr_cache_cleanup() {
   for dir in "$finddir"/*; do
     if [ -d "$dir" ]; then  # Check if it's a directory
       find "$dir" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -nr | awk 'FNR > 5 {print $2}' | xargs rm -rf
-      du -hs --time $dir/* | awk -F'\t' '{print $2 "\t"  $3 "\t" $1}' | sort
-      echo ""
+      if compgen -G "$dir/*" > /dev/null; then
+        du -hs --time $dir/* | awk -F'\t' '{print $2 "\t"  $3 "\t" $1}' | sort
+        echo ""
+      fi
     fi
   done
   du -hs --time $finddir | awk -F'\t' '{print "Cache total: " $1}'
