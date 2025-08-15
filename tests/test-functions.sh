@@ -19,14 +19,7 @@ else
   platformsh_recipes_cr_cache_restore "cachethis" cachethis/
 fi
 
-platformsh_recipes_cr_init "scripts" "" \
-  scripts/
-if platformsh_recipes_cr_should_run "scripts"; then
-  platformsh_recipes_cr_cache_store "scripts" cachethis/
-  platformsh_recipes_cr_success "scripts"
-else
-  platformsh_recipes_cr_cache_restore "scripts" cachethis/
-fi
+
 
 platformsh_recipes_cr_preset_drupal_composer
 
@@ -35,6 +28,8 @@ platformsh_recipes_cr_cache_cleanup
 platformsh_recipes_cr_deploy_should_run "composer" && echo "do composer"
 platformsh_recipes_cr_deploy_store
 platformsh_recipes_cr_deploy_should_run "composer" || echo "do not composer"
+
+echo "Errors"
 
 # Errors
 platformsh_recipes_cr_init "just one argument"

@@ -6,7 +6,7 @@ set -e -o pipefail
 # rm -fr /tmp/tmpapp ; mkdir -p /tmp/tmpapp/cache
 # export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PLATFORM_APP_DIR}/.global/lib/x86_64-linux-gnu"
 # PLATFORM_CACHE_DIR=/tmp/tmpapp/cache
-# Then copy from the next line to the whole install_debin() function and paste
+# Then copy from the next line to the whole install_debian() function and paste
 # it on a terminal
 
 source /etc/os-release
@@ -182,6 +182,7 @@ else
   install_debian bsdextrautils
 fi
 install_debian smem
+install_debian tmux
 
 # screen tweaks
 cp $PLATFORMSH_RECIPES_INSTALLDIR/platformsh-recipes/assets/platformsh/.screenrc ~/.screenrc
